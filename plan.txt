@@ -1,0 +1,24 @@
+Plan for ottr:
+
+Tasks:
+- Define and prioritize desired features
+- Identify initial tools
+
+Language:
+- Primarily Javascript
+
+Desired Features:
+
+- Dice rolling - This should be fairly simple to add. 
+- Chat - It would be nice if an existing program like Discord could be tied
+  in here. Otherwise it will need something basic eventually.
+- Character Sheets - Need to be able to create and share character sheets.
+  Should be able to roll from character sheets. Should be easy to mod in order
+  to support many game types.
+- NPC/Location/Item generation and tracking - Need to be able to create and
+  track. Should support creating ahead of time and sharing later with players.
+  In general, everything that gets created should have some sort of visiblity
+  flag to allow the GM to hide it from players.
+- Wiki - Ideally this would automatically tie in to the creation of NPCs, 
+  locations, and items. Wiki.js looks like it might work well for this. 
+
