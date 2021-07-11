@@ -22,3 +22,10 @@ Desired Features:
 - Wiki - Ideally this would automatically tie in to the creation of NPCs, 
   locations, and items. Wiki.js looks like it might work well for this. 
 
+Minimum Features
+- Communication between clients and host
+- Dice rolls
+- Chat
+- Character sheets
+- Drawing
+- Game log
