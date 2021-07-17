@@ -1,30 +1,14 @@
 import './App.css';
+import {Canvas} from './components/Canvas';
+import {GameFeed} from './components/GameFeed';
 
 function App() {
   return (
     <div className="App">
-      <AppCanvas/>
+      <Canvas/>
       <GameFeed/>
     </div>
   );
-}
-
-function AppCanvas() {
-  return (
-    <canvas className="App-canvas"/>
-  );
-}
-
-function GameFeed() {
-  return (
-    <div className="App-game-feed">
-        <p>Open TableTop RPG</p>
-        <ul/>
-        <form id="feed-form" action="">
-          <input id="feed-input" autocomplete="off" /><button>Send</button>
-        </form>
-    </div>
-  )
 }
 
 export default App;
