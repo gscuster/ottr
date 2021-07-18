@@ -6,12 +6,22 @@ const { Server } = require('socket.io');
 const io = new Server(server);
 const port = 4000;
 
-io.on('connection', (socket) => {
-    console.log('a user connected');
+io.on('connection', socket => {
+  console.log(`connect: ${socket.id}`);
+
+  socket.on('disconnect', () => {
+    console.log(`disconnect: ${socket.id}`);
+  });
+
+  socket.on('message', (msg) => {
+    console.log('message: ' + msg);
+  });
 });
 
-server.listen(port, () => {
-    console.log(`listening on *:${port}`);
+io.listen(port, {
+  cors: {
+    origin: ["http://localhost:3000"]
+  }
 });
 
 
