@@ -3,6 +3,13 @@
   background-color: #404040;
   text-align: center;
   font-size: larger;
+  color: white;
+}
+
+.feed-list {
+  list-style-type: none;
+  margin-left: 0;
+  padding-left: 2em;
 }
 
 .feed-form { 

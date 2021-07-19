@@ -1,0 +1,10 @@
+.feed-item {
+  text-align: left;
+  color: white;
+}
+.feed-item:before {
+  display: inline-block;
+  content: "-";
+  width: 1em;
+  margin-left: -1em;
+}

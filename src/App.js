@@ -10,8 +10,15 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      connected: socket.connected
+      connected: socket.connected,
+      feed: ['Welcome to OTTR']
     };
+    this.addFeedItem = this.addFeedItem.bind(this)
+  }
+
+  addFeedItem(item) {
+    const feed = [ ...this.state.feed, item ];
+    this.setState({feed})
   }
 
   componentDidMount() {
@@ -33,10 +40,12 @@ export default class App extends React.Component {
   }
 
   render () {
+    const { addFeedItem } = this;
+    const { feed } = this.state;
     return (
       <div className="App">
         <Canvas/>
-        <GameFeed socket={socket}/>
+        <GameFeed socket={socket} feed={feed} onSubmit={ addFeedItem }/>
       </div>
     );
   }
