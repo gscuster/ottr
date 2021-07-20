@@ -2,14 +2,13 @@ import './GameFeed.css'
 import {FeedItem} from './FeedItem.js';
 import React, { useState } from "react";
 
-export const GameFeed = ({socket, feed=[], onSubmit}) => {
+export const GameFeed = ({socket, feed=[]}) => {
   const [message, setMessage] = useState("");
   
   const handleSubmit = (e) => {
       e.preventDefault();
       if (message) {
         socket.emit('message', message);
-        onSubmit(message);
         setMessage('');
       }
   }

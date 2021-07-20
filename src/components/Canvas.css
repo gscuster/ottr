@@ -2,3 +2,9 @@
   flex: 70%;
   background-color: #BBBBBB;
 }
+
+@media screen and (max-width:768px){
+  .canvas {
+    display:none;
+  }
+}

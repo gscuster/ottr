@@ -39,13 +39,17 @@ export default class App extends React.Component {
     });
   }
 
+  onMessage(content) {
+    console.log(`Message received:${content}`);
+    this.addFeedItem(content);
+  }
+
   render () {
-    const { addFeedItem } = this;
     const { feed } = this.state;
     return (
       <div className="App">
         <Canvas/>
-        <GameFeed socket={socket} feed={feed} onSubmit={ addFeedItem }/>
+        <GameFeed socket={socket} feed={feed}/>
       </div>
     );
   }

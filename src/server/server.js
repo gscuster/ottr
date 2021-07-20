@@ -15,12 +15,13 @@ io.on('connection', socket => {
 
   socket.on('message', (msg) => {
     console.log('message: ' + msg);
+    io.emit('message', msg);
   });
 });
 
 io.listen(port, {
   cors: {
-    origin: ["http://localhost:3000"]
+    origin: ["http://localhost:3000", "http://192.168.0.191:3000"]
   }
 });
 
