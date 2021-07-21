@@ -22,7 +22,10 @@ export default class App extends React.Component {
   addFeedItem(item) {
     const feed = [ 
       ...this.state.feed,
-      item.username + ': ' + item.message
+      {
+        username: item.username,
+        message: item.message
+      }
     ];
     this.setState({feed})
   }
@@ -44,6 +47,7 @@ export default class App extends React.Component {
 
   onMessage(content) {
     console.log(content.message);
+    console.log(content.username);
     console.log(`Message received:${content}`);
     this.addFeedItem(content);
   }

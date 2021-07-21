@@ -10,7 +10,9 @@ export const GameFeed = ({feed=[], socket, userSelected, selectUserName}) => {
     <ul className="feed-list">
       {feed.map((feedItem, i) => <FeedItem key={i} feedItem={feedItem}/>)}
     </ul>
-    {userSelected ? <FeedForm socket={socket}/> : <UsernameForm selectUserName={selectUserName}/>}
+    {userSelected ? 
+      <FeedForm socket={socket}/> : 
+      <UsernameForm selectUserName={selectUserName}/>}
     </div>
   );
 }

@@ -5,6 +5,6 @@
 .feed-item:before {
   display: inline-block;
   content: "";
-  width: 1em;
+  width: 0.5em;
   margin-left: -1em;
 }
