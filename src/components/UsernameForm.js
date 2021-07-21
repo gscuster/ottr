@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 
-export const UsernameForm = ({socket}) => {
+export const UsernameForm = ({socket, selectUserName}) => {
   const [userName, setUserName] = useState("");
   
   const handleSubmit = (e) => {
       e.preventDefault();
-      if (userName) {
-      }
+      selectUserName(userName)
   }
 
   return (
