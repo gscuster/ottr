@@ -34,22 +34,47 @@ export default class App extends React.Component {
     socket.on('connect', () => this.onConnectionStateUpdate());
     socket.on('disconnect', () => this.onConnectionStateUpdate());
     socket.on('message', (content) => this.onMessage(content));
+    socket.on('session', ({sessionID, userID}) => this.onSession(sessionID, userID));
+    socket.on('connect_error', (err) => this.onConnectionError(err));
+
+    const sessionID = localStorage.getItem("sessionID");
+
+    if (sessionID) {
+      socket.auth = { sessionID };
+      socket.connect();
+      const userSelected = true;
+      this.setState({userSelected});
+    }
   }
 
   componentWillUnmount() {
     socket.off('connect');
     socket.off('disconnect');
     socket.off('message');
+    socket.off('session');
+    socket.off('connect_error');
+  }
+
+  onConnectionError(err) {
+    if (err.message === "invalid username") {
+      const userSelected = false;
+      this.setState({userSelected});
+    }
   }
 
   onConnectionStateUpdate() {
   }
 
   onMessage(content) {
-    console.log(content.message);
-    console.log(content.username);
-    console.log(`Message received:${content}`);
     this.addFeedItem(content);
+  }
+
+  onSession(sessionID, userID) {
+    socket.auth = { sessionID };
+    // store it in the localStorage
+    localStorage.setItem("sessionID", sessionID);
+    // save the ID of the user
+    socket.userID = userID;
   }
 
   selectUserName(username) {
