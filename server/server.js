@@ -1,11 +1,12 @@
-const express = require('express');
+import * as Message from './Message.js';
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+import { v4 as uuidv4 } from 'uuid';
 const app = express();
-const http = require('http');
 const server = http.createServer(app);
-const { Server } = require('socket.io');
 const io = new Server(server);
 const port = 4000;
-const {v4: uuidv4} = require('uuid');
 
 let sessionData = [];
 
@@ -51,13 +52,7 @@ io.on('connection', socket => {
     console.log(`disconnect: ${socket.id}`);
   });
 
-  socket.on('message', (msg) => {
-    console.log('message: ' + msg);
-    io.emit('message', {
-      username: socket.username,
-      message: msg
-    });
-  });
+  socket.on('message', (msg) => Message.onMessage(msg, io, socket));
 });
 
 io.listen(port, {

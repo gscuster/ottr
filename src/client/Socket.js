@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import EventEmitter from 'events';
 
-const address = '192.168.0.4:4000';
+const address = '192.168.0.191:4000';
 const socket = io(address, {autoConnect: false});
 export const Socket = new EventEmitter();
 
@@ -12,8 +12,10 @@ export const setup = () => {
   socket.on('session', ({sessionID, userID}) => onSession(sessionID, userID));
   socket.on('connect_error', (err) => onConnectionError(err));
 
+  // Get stored session ID
   const sessionID = localStorage.getItem("sessionID");
 
+  // If we've got a stored session ID, good to go
   if (sessionID) {
     socket.auth = { sessionID };
     socket.connect();
@@ -32,6 +34,7 @@ export const teardown = () => {
 
 function onConnectionError(err) {
   if (err.message === "invalid username") {
+    // Reset user selection
     const userSelected = false;
     console.log(`Connection error`);
     Socket.emit('userSelected', userSelected);

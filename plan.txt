@@ -1,8 +1,7 @@
 Plan for ottr:
 
 Tasks:
-- Define and prioritize desired features
-- Identify initial tools
+- Add server commands
 
 Language:
 - Primarily Javascript

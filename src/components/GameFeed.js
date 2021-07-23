@@ -11,7 +11,9 @@ export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName}) =
       {feed.map((feedItem, i) => <FeedItem key={i} feedItem={feedItem}/>)}
     </ul>
     {userSelected ? 
+      // If we've picked a user, use normal feed input
       <FeedForm sendMessage={sendMessage}/> : 
+      // Otherwise, prompt for username selection
       <UsernameForm selectUserName={selectUserName}/>}
     </div>
   );
