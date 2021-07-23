@@ -5,10 +5,6 @@ const address = '192.168.0.4:4000';
 const socket = io(address, {autoConnect: false});
 export const Socket = new EventEmitter();
 
-export const connect = () => {
-    socket.connect();
-}
-
 export const setup = () => {
   socket.on('connect', () => onConnectionStateUpdate());
   socket.on('disconnect', () => onConnectionStateUpdate());
@@ -20,7 +16,7 @@ export const setup = () => {
 
   if (sessionID) {
     socket.auth = { sessionID };
-    connect();
+    socket.connect();
     const userSelected = true;
     Socket.emit('userSelected', userSelected);
   }
@@ -37,6 +33,7 @@ export const teardown = () => {
 function onConnectionError(err) {
   if (err.message === "invalid username") {
     const userSelected = false;
+    console.log(`Connection error`);
     Socket.emit('userSelected', userSelected);
   }
 }
@@ -56,7 +53,11 @@ function onSession(sessionID, userID) {
   socket.userID = userID;
 }
 
-function selectUserName(username) {
+export const sendMessage = (message) => {
+  socket.emit('message', message);
+}
+
+export const selectUserName = (username) => {
   if (username) {
     socket.auth = { username };
     socket.connect();

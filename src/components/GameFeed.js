@@ -3,7 +3,7 @@ import {FeedItem} from './FeedItem.js';
 import {FeedForm} from './FeedForm.js';
 import {UsernameForm} from './UsernameForm.js';
 
-export const GameFeed = ({feed=[], socket, userSelected, selectUserName}) => { 
+export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName}) => { 
   return (
     <div className="game-feed">
     <p>Open TableTop RPG</p>
@@ -11,7 +11,7 @@ export const GameFeed = ({feed=[], socket, userSelected, selectUserName}) => {
       {feed.map((feedItem, i) => <FeedItem key={i} feedItem={feedItem}/>)}
     </ul>
     {userSelected ? 
-      <FeedForm socket={socket}/> : 
+      <FeedForm sendMessage={sendMessage}/> : 
       <UsernameForm selectUserName={selectUserName}/>}
     </div>
   );

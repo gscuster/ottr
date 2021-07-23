@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-export const FeedForm = ({socket}) => {
+export const FeedForm = ({sendMessage}) => {
   const [message, setMessage] = useState("");
   
   const handleSubmit = (e) => {
       e.preventDefault();
       if (message) {
-        socket.emit('message', message);
+        sendMessage(message);
         setMessage('');
       }
   }
