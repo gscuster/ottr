@@ -6,7 +6,6 @@ import io from 'socket.io-client';
 
 const address = '192.168.0.4:4000';
 const socket = io(address, {autoConnect: false});
-
 export default class App extends React.Component {
   constructor(props) {
     super(props);
