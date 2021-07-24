@@ -18,10 +18,7 @@ export default class App extends React.Component {
   addFeedItem(item) {
     const feed = [ 
       ...this.state.feed,
-      {
-        username: item.username,
-        message: item.message
-      }
+      {...item}
     ];
     this.setState({feed})
   }

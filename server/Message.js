@@ -1,24 +1,44 @@
+import { DiceRoll } from 'rpg-dice-roller';
+
 export const onMessage = (msg, io, socket) => {
   console.log('Received: ' + msg);
-  switch (parseMessageType(msg)) {
-    case '/roll':
-    case '/r':
-      console.log('Rolling');
-      break;
-    default:
-      io.emit('message', {
-        username: socket.username,
-        message: msg
-      });
+
+  // Create basic output object
+  const message = {
+    type: 'message',
+    username: socket.username,
+    message: msg
   }
+
+  // Get any applicable command properties
+  const spacePattern = /\s+/;
+  const msgSplit = msg.trim().split(spacePattern)
+  const command = msgCommand(msgSplit)
+
+  // Create the output
+  const output = {...message, ...command};
+
+  io.emit('message', output);
 }
 
-const parseMessageType = (msg) => {
-  const spacePattern = /\s+/;
-  const msgFormatted = msg.trim().split(spacePattern)
-  if (msgFormatted.length > 0 &&  msgFormatted[0].startsWith('/')) {
-    return msgFormatted[0];
+const msgCommand = (args) => {
+  if (args.length === 0 || !args[0].startsWith('/')) {
+    // Not a command
+    return {};
   }
-
-  return 'message';
+  switch (args[0]) {
+    case '/roll': 
+    case '/r':
+      // Roll command, try rolling dice
+      try {
+        const input = args.slice(1).join(' ') || ' ';
+        const roll = new DiceRoll(input);
+        return {type: 'roll', roll: roll};
+      }
+      catch (e) {
+        console.log(e);
+        return {};
+      }
+  }
+  return {};
 }
