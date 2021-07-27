@@ -7,6 +7,7 @@ export const onMessage = (msg, io, socket) => {
   const message = {
     type: 'message',
     username: socket.username,
+    userID: socket.userID,
     message: msg
   }
 

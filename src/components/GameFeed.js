@@ -8,7 +8,8 @@ export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName}) =
     <div className="game-feed">
     <p>Open TableTop RPG</p>
     <ul className="feed-list">
-      {feed.map((feedItem, i) => <FeedItem key={i} feedItem={feedItem}/>)}
+      {feed.map((feedItem, i) => 
+        <FeedItem feedItem={feedItem} prev={feed[i-1]} next={feed[i+1]}/>)}
     </ul>
     {userSelected ? 
       // If we've picked a user, use normal feed input
