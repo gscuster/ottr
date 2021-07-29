@@ -42,10 +42,11 @@ io.use((socket, next) => {
 });
 
 io.on('connection', socket => {
-  console.log(`connect: ${socket.id}`);
+  console.log(`connect: ${socket.id} for user: $${socket.username}`);
   socket.emit("session", {
     sessionID: socket.sessionID,
     userID: socket.userID,
+    username: socket.username
   });
 
   socket.on('disconnect', () => {
@@ -59,7 +60,8 @@ io.listen(port, {
   cors: {
     origin: ["http://localhost:3000", 
       "http://192.168.0.191:3000", 
-      "http://192.168.0.4:3000"]
+      "http://192.168.0.4:3000",
+      "http://192.168.1.91:3000"]
   }
 });
 
