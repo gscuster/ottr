@@ -10,11 +10,13 @@ export default class App extends React.Component {
     this.state = {
       feed: [],
       userSelected: false,
-      username: null
+      username: null,
+      editUserActive: false
     };
     this.addFeedItem = this.addFeedItem.bind(this);
     this.onUserSelected = this.onUserSelected.bind(this);
     this.onConnected = this.onConnected.bind(this);
+    this.setEditUserActive = this.setEditUserActive.bind(this);
   }
 
   addFeedItem(item) {
@@ -44,13 +46,21 @@ export default class App extends React.Component {
     this.setState({userSelected});
   }
 
+  setEditUserActive = (editUserActive) => {
+    this.setState({editUserActive});
+    return false;
+  }
+
   render () {
-    const { feed, userSelected, username} = this.state;
+    const { feed, userSelected, username, editUserActive} = this.state;
+    const { setEditUserActive } = this;
     return (
       <div className="App">
         <Canvas/>
         <GameFeed sendMessage={Socket.sendMessage} feed={feed} 
-          userSelected={userSelected} selectUserName={Socket.selectUserName} username={username}/>
+          userSelected={userSelected} selectUserName={Socket.selectUserName} 
+          username={username} editUserActive={editUserActive}
+          setEditUserActive={setEditUserActive} editUserName={Socket.editUserName}/>
       </div>
     );
   }

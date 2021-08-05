@@ -42,7 +42,7 @@ io.use((socket, next) => {
 });
 
 io.on('connection', socket => {
-  console.log(`connect: ${socket.id} for user: $${socket.username}`);
+  console.log(`connect: ${socket.id} for user: ${socket.username}`);
   socket.emit("session", {
     sessionID: socket.sessionID,
     userID: socket.userID,
@@ -54,6 +54,19 @@ io.on('connection', socket => {
   });
 
   socket.on('message', (msg) => Message.onMessage(msg, io, socket));
+
+  socket.on('changeUserName', (username) => {
+    if (username) {
+      socket.username = username;
+      const {sessionID, userID} = socket;
+      sessionData = sessionData.map((session) => {
+        return session.sessionID === socket.sessionID ? 
+          {sessionID, userID, username} :
+          session;
+      });
+      socket.emit('username_edited', username);
+    }
+  })
 });
 
 io.listen(port, {
