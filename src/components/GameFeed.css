@@ -1,7 +1,25 @@
 .game-feed {
-  flex: 30%;
+  grid-column: 3;
   background-color: #404040;
   color: white;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 100%;
+  height: 100vh;
+}
+
+@media screen and (max-width:768px){
+  .game-feed {
+    grid-column: 1 / 4;
+  }
+}
+
+.header {
+  grid-row: 1;
+}
+
+.footer {
+  grid-row: 3;
 }
 
 .feed-title {
@@ -11,25 +29,23 @@
 }
 
 .feed-list {
+  grid-row: 2;
   list-style-type: none;
   margin-left: 0;
   padding-left: 0.5em;
   display: block;
+  overflow-y: auto;
 }
 
 .feed-form { 
   display: flex;
-  width: 30%;
   background: #1111113b;
   padding: 0.25rem;  
-  height: 3rem; position: 
-  absolute; bottom: 0;
-  box-sizing: 
-  border-box; 
+  height: 3rem;
+  box-sizing: border-box; 
 }
 
 .feed-input { 
-  border: none; 
   padding: 0 1rem; 
   border-radius: 2rem; 
   margin: 0.25rem;
@@ -44,6 +60,5 @@
   padding: 0 1rem;
   margin: 0.25rem; 
   border-radius: 3px;
-  outline: none; 
   color: #fff; 
 }

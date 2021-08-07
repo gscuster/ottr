@@ -1,7 +1,8 @@
-#root, body, div {
+#root, body {
   height: 100vh;
 }
 .App {
-  display: flex;
-  align-items: left;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  height: 100vh;
 }
