@@ -1,6 +1,8 @@
 .canvas {
-  flex: 70%;
   background-color: #BBBBBB;
+  grid-column: 1 / 3;
+  width: 100%;
+  height: 100%;
 }
 
 @media screen and (max-width:768px){
