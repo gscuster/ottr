@@ -40,6 +40,7 @@ const msgCommand = (args) => {
         console.log(e);
         return {};
       }
+    default: // Do nothing. Message should get printed as normal.
   }
   return {};
 }
