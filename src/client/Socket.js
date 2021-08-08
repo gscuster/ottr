@@ -1,7 +1,8 @@
 import io from 'socket.io-client';
 import EventEmitter from 'events';
 
-const address = '192.168.0.4:4000';
+const port = '4000';
+const address = window.location.hostname + ':' + port;
 const socket = io(address, {autoConnect: false});
 export const Socket = new EventEmitter();
 
