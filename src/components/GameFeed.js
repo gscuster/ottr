@@ -1,22 +1,11 @@
 import './GameFeed.css'
-import {FeedItem} from './FeedItem.js';
+import FeedList from './FeedList.js';
 import {FeedForm} from './FeedForm.js';
 import {UsernameForm} from './UsernameForm.js';
 import { UsernameText } from './UsernameText';
-import React, { useEffect, useRef } from "react";
 
 export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName, 
   username, editUserActive, setEditUserActive, editUserName}) => { 
-
-  const feedEndRef = useRef(null);
-  const scrollToBottom = () => {
-    feedEndRef.current.scrollIntoView({ behavior: "smooth" });
-  };
-  useEffect(scrollToBottom, [feed]);
-
-  const onScrollEvent = (e) => {
-    console.log(e);
-  }
   
   return (
     <div className="game-feed">
@@ -28,13 +17,8 @@ export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName,
             setEditUserActive={setEditUserActive}
             editUserName={editUserName}/>}
       </div>
-      <div className="body" onScroll={onScrollEvent}>
-        <ul className="feed-list">
-          {feed.map((feedItem, i) => 
-            <FeedItem key={i} feedItem={feedItem} prev={feed[i-1]} next={feed[i+1]}/>)}
-        </ul>
-        <div ref={feedEndRef}></div>
-      </div>
+
+      <FeedList feed={feed} divClass={"body"} listClass={"feed-list"}/>
     
       <div className="footer">
         {userSelected ? 
