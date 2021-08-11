@@ -18,6 +18,11 @@
   grid-row: 1;
 }
 
+.body {
+  grid-row: 2;
+  overflow-y: auto;
+}
+
 .footer {
   grid-row: 3;
 }
@@ -29,12 +34,10 @@
 }
 
 .feed-list {
-  grid-row: 2;
   list-style-type: none;
   margin-left: 0;
   padding-left: 0.5em;
   display: block;
-  overflow-y: auto;
 }
 
 .feed-form { 

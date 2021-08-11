@@ -1,11 +1,12 @@
 import './GameFeed.css'
-import {FeedItem} from './FeedItem.js';
+import FeedList from './FeedList.js';
 import {FeedForm} from './FeedForm.js';
 import {UsernameForm} from './UsernameForm.js';
 import { UsernameText } from './UsernameText';
 
 export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName, 
   username, editUserActive, setEditUserActive, editUserName}) => { 
+  
   return (
     <div className="game-feed">
       <div className="header">
@@ -16,11 +17,8 @@ export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName,
             setEditUserActive={setEditUserActive}
             editUserName={editUserName}/>}
       </div>
-    
-      <ul className="feed-list">
-        {feed.map((feedItem, i) => 
-          <FeedItem key={i} feedItem={feedItem} prev={feed[i-1]} next={feed[i+1]}/>)}
-      </ul>
+
+      <FeedList feed={feed} divClass={"body"} listClass={"feed-list"}/>
     
       <div className="footer">
         {userSelected ? 
