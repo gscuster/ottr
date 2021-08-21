@@ -1,14 +1,19 @@
 import * as Message from './Message.js';
+import * as Database from './Database.js';
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 const port = 4000;
 
 let sessionData = [];
+
+const db = Database.connect();
+Database.addCollection(db);
 
 io.use((socket, next) => {
   const sessionID = socket.handshake.auth.sessionID;
@@ -71,10 +76,7 @@ io.on('connection', socket => {
 
 io.listen(port, {
   cors: {
-    origin: ["http://localhost:3000", 
-      "http://192.168.0.191:3000", 
-      "http://192.168.0.4:3000",
-      "http://192.168.1.91:3000"]
+    origin: "*"
   }
 });
 
