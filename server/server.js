@@ -65,7 +65,7 @@ io.on('connection', socket => {
 
   socket.on('message', (msg) => Message.onMessage(msg, io, socket));
 
-  socket.on('changeUserName', (username) => {
+  socket.on('changeUserName', async (username) => {
     if (username) {
       socket.username = username;
       const {sessionID, userID} = socket;
@@ -74,6 +74,18 @@ io.on('connection', socket => {
           {sessionID, userID, username} :
           session;
       });
+       // Update in database as well
+       const filter = { 
+        _id: 'sessionData',
+        'sessionData.sessionID': sessionID 
+      };
+      const updateDoc = {
+        $set: {
+          'sessionData.$.username': username
+        }
+      };
+      (await collection).updateOne(filter, updateDoc);
+
       socket.emit('username_edited', username);
     }
   })
