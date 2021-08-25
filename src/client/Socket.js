@@ -13,6 +13,7 @@ export const setup = () => {
   socket.on('session', ({sessionID, userID, username}) => onSession(sessionID, userID, username));
   socket.on('connect_error', (err) => onConnectionError(err));
   socket.on('username_edited', (username) => {Socket.emit('connectedAs', username)});
+  socket.on('feed', (feed) => {Socket.emit('feed', feed)});
 
   // Get stored session ID
   const sessionID = localStorage.getItem("sessionID");
@@ -57,7 +58,9 @@ function onSession(sessionID, userID, username) {
   // save the ID of the user
   socket.userID = userID;
   Socket.emit('connectedAs', username);
-  console.log(userID);
+
+  // Get feed messages
+  socket.emit('getFeed');
 }
 
 export const editUserName = (username) => {

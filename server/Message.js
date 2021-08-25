@@ -1,6 +1,6 @@
 import { DiceRoll } from 'rpg-dice-roller';
 
-export const onMessage = (msg, io, socket) => {
+export const onMessage = async (msg, io, socket, collection) => {
   console.log('Received: ' + msg);
 
   // Create basic output object
@@ -18,6 +18,17 @@ export const onMessage = (msg, io, socket) => {
 
   // Create the output
   const output = {...message, ...command};
+
+  const filter = { 
+    _id: 'game_data'
+  };
+  const updateDoc = {
+    $push: {
+      'main_feed': output
+    }
+  };
+  const options = { upsert: true };
+  (await collection).updateOne(filter, updateDoc, options);
 
   io.emit('message', output);
 }
