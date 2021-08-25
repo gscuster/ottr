@@ -1,8 +1,7 @@
 import { MongoClient } from 'mongodb';
 import * as Authentication from './Authentication.js'
 
-export const connect = () => {
-
+export const connect = async () => {
   const dbName = Authentication.getDatabaseName();
   const username = Authentication.getUsername();
   const password = Authentication.getPassword();
@@ -12,26 +11,21 @@ export const connect = () => {
   // Create a new MongoClient
   const client = new MongoClient(uri);
 
-  client.connect()
+  await client.connect()
 
-  const db = client.db(dbName);
+  const collection = client.db('ottr').collection('default');
 
-  if (db !== null) {
-    console.log(`Connected to ${dbName}`);
-  }
-
-  return db;
+  return collection;
 }
 
-export const addCollection = (db) => {
-  db.listCollections({name: 'default'})
-    .next(function(err, collinfo) {
-      if (collinfo) {
-          console.log('It alrready exists');
-      }
-      else {
-        db.createCollection('default');
-      }
-    });
+export const updateArray = async (collection, id, key, value) => {
+  const filter = { _id: id };
+  const options = { upsert: true };
+  const updateDoc = {
+    $addToSet: {
+      [key]: value
+    }
+  };
+  (await collection).updateOne(filter, updateDoc, options);
 }
 

@@ -12,10 +12,12 @@ const port = 4000;
 
 let sessionData = [];
 
-const db = Database.connect();
-Database.addCollection(db);
+// Get the collection from the database
+const collection = Database.connect();
 
-io.use((socket, next) => {
+io.use(async (socket, next) => {
+  // Get the session data from the database, if it exists
+  sessionData = (await (await collection).findOne({'_id': 'sessionData'})).sessionData ?? [];
   const sessionID = socket.handshake.auth.sessionID;
 
   if (sessionID) {
@@ -38,11 +40,14 @@ io.use((socket, next) => {
   socket.sessionID = uuidv4();
   socket.userID = uuidv4();
   socket.username = username;
-  sessionData.push({
+  const sessionInfo = {
     sessionID: socket.sessionID, 
     userID: socket.userID, 
     username
-  });
+  };
+  sessionData.push(sessionInfo);
+  // Update the session data in the database
+  Database.updateArray(collection, 'sessionData', 'sessionData', sessionInfo);
   next();
 });
 
