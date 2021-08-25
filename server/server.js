@@ -53,17 +53,18 @@ io.use(async (socket, next) => {
 
 io.on('connection', socket => {
   console.log(`connect: ${socket.id} for user: ${socket.username}`);
-  socket.emit("session", {
-    sessionID: socket.sessionID,
-    userID: socket.userID,
-    username: socket.username
-  });
 
   socket.on('disconnect', () => {
     console.log(`disconnect: ${socket.id}`);
   });
 
-  socket.on('message', (msg) => Message.onMessage(msg, io, socket));
+  socket.on('message', (msg) => Message.onMessage(msg, io, socket, collection));
+
+  socket.on('getFeed', async () => {
+    const feed = (await (await collection).findOne({'_id': 'game_data'})).main_feed ?? [];
+    console.log('Sending back feed');
+    socket.emit('feed', feed);
+  });
 
   socket.on('changeUserName', async (username) => {
     if (username) {
@@ -89,6 +90,12 @@ io.on('connection', socket => {
       socket.emit('username_edited', username);
     }
   })
+
+  socket.emit("session", {
+    sessionID: socket.sessionID,
+    userID: socket.userID,
+    username: socket.username
+  });
 });
 
 io.listen(port, {
