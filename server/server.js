@@ -1,8 +1,10 @@
 import * as Message from './Message.js';
+import * as Database from './Database.js';
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -10,7 +12,12 @@ const port = 4000;
 
 let sessionData = [];
 
-io.use((socket, next) => {
+// Get the collection from the database
+const collection = Database.connect();
+
+io.use(async (socket, next) => {
+  // Get the session data from the database, if it exists
+  sessionData = (await (await collection).findOne({'_id': 'sessionData'})).sessionData ?? [];
   const sessionID = socket.handshake.auth.sessionID;
 
   if (sessionID) {
@@ -33,11 +40,14 @@ io.use((socket, next) => {
   socket.sessionID = uuidv4();
   socket.userID = uuidv4();
   socket.username = username;
-  sessionData.push({
+  const sessionInfo = {
     sessionID: socket.sessionID, 
     userID: socket.userID, 
     username
-  });
+  };
+  sessionData.push(sessionInfo);
+  // Update the session data in the database
+  Database.updateArray(collection, 'sessionData', 'sessionData', sessionInfo);
   next();
 });
 
