@@ -81,7 +81,7 @@ io.on('connection', socket => {
 
 io.listen(port, {
   cors: {
-    origin: "*"
+    origin: '*'
   }
 });
 
