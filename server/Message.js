@@ -45,7 +45,7 @@ const msgCommand = (args) => {
       try {
         const input = args.slice(1).join(' ') || ' ';
         const roll = new DiceRoll(input);
-        return {type: 'roll', roll: roll};
+        return {type: 'roll', roll: roll.toJSON()};
       }
       catch (e) {
         console.log(e);
