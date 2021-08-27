@@ -1,6 +1,6 @@
-import EditIcon from '../res/edit.svg';
+import './EditButton.css'
 
-export const EditButton = ({width, height, onClick}) => {
-    return <img src={EditIcon} width={width} height={height}
+export const EditButton = ({width, height, onClick, icon}) => {
+    return <img className='editButton' src={icon} width={width} height={height}
         alt="Edit" onClick={onClick}/>
 }

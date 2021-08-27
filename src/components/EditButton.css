@@ -1,0 +1,7 @@
+.editButton {
+  padding: 0;
+  margin-left: 1em;
+}
+.editButton:active {
+  background-color: #222222;
+}
