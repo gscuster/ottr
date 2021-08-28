@@ -56,6 +56,14 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     console.log(`disconnect: ${socket.id}`);
+    // Create basic output object
+    const systemMsg = {
+      type: 'message',
+      username: 'System',
+      userID: '',
+      message: `User ${socket.username} has disconnected.`
+    }
+    io.emit('message', systemMsg);
   });
 
   socket.on('message', (msg) => Message.onMessage(msg, io, socket, collection));
@@ -96,6 +104,14 @@ io.on('connection', socket => {
     userID: socket.userID,
     username: socket.username
   });
+  // Create basic output object
+  const systemMsg = {
+    type: 'message',
+    username: 'System',
+    userID: '',
+    message: `User ${socket.username} has connected.`
+  }
+  io.emit('message', systemMsg);
 });
 
 io.listen(port, {
