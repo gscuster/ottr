@@ -5,3 +5,9 @@
 .dice:active {
   background-color: #aaaaaa
 }
+
+.dice-button {
+  background: transparent;
+  outline: none;
+  border: none;
+}

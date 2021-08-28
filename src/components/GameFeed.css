@@ -57,7 +57,7 @@
 .feed-input:focus { 
   outline: none; 
 }
-.feed-form > button { 
+.send-button { 
   background: #444444; 
   border: none;
   padding: 0 1rem;

@@ -20,7 +20,7 @@ export const FeedForm = ({sendMessage, rollDice}) => {
         autoComplete="off"
         value={message}
         onChange={e => setMessage(e.target.value)}/>
-      <button>Send</button>
+      <button className='send-button'>Send</button>
     </form>
   )
 }

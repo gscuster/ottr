@@ -70,11 +70,13 @@ export const editUserName = (username) => {
 }
 
 export const rollDice = (evt) => {
-  const defaultRoll = '4dF';
+  console.log(evt);
+  const defaultRoll = '/r 4dF';
   const modifier = evt.target.getAttribute('rating');
   const skill = evt.target.getAttribute('skill');
   const character = evt.target.getAttribute('character');
-  const message = `/r ${defaultRoll} + ${modifier}`;
+  const message = (modifier != null && modifier !== '0') ? 
+    defaultRoll + ` + ${modifier}` : defaultRoll
   socket.emit('message', message, {skill: skill, character: character});
 }
 
