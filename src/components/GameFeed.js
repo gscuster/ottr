@@ -5,7 +5,7 @@ import {UsernameForm} from './UsernameForm.js';
 import { UsernameText } from './UsernameText';
 
 export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName, 
-  username, editUserActive, setEditUserActive, editUserName}) => { 
+  username, editUserActive, setEditUserActive, editUserName, rollDice}) => { 
   
   return (
     <div className="game-feed">
@@ -23,7 +23,7 @@ export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName,
       <div className="footer">
         {userSelected ? 
           // If we've picked a user, use normal feed input
-          <FeedForm sendMessage={sendMessage}/> : 
+          <FeedForm sendMessage={sendMessage} rollDice={rollDice}/> : 
           // Otherwise, prompt for username selection
           <UsernameForm selectUserName={selectUserName}/>}
       </div>

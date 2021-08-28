@@ -66,7 +66,7 @@ io.on('connection', socket => {
     io.emit('message', systemMsg);
   });
 
-  socket.on('message', (msg) => Message.onMessage(msg, io, socket, collection));
+  socket.on('message', (msg, data=null) => Message.onMessage(msg, data, io, socket, collection));
 
   socket.on('getFeed', async () => {
     const feed = (await (await collection).findOne({'_id': 'game_data'})).main_feed ?? [];
@@ -104,6 +104,7 @@ io.on('connection', socket => {
     userID: socket.userID,
     username: socket.username
   });
+
   // Create basic output object
   const systemMsg = {
     type: 'message',

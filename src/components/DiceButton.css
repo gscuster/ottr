@@ -1,0 +1,7 @@
+.dice {
+  padding: 0;
+}
+
+.dice:active {
+  background-color: #aaaaaa
+}

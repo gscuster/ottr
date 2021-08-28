@@ -64,4 +64,7 @@
   margin: 0.25rem; 
   border-radius: 3px;
   color: #fff; 
+}#feed-dice {
+  margin-top: 0.25rem;
+  filter: invert(0.8);
 }

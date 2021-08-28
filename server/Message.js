@@ -1,6 +1,6 @@
 import { DiceRoll } from 'rpg-dice-roller';
 
-export const onMessage = async (msg, io, socket, collection) => {
+export const onMessage = async (msg, data, io, socket, collection) => {
   console.log('Received: ' + msg);
 
   // Create basic output object
@@ -14,7 +14,7 @@ export const onMessage = async (msg, io, socket, collection) => {
   // Get any applicable command properties
   const spacePattern = /\s+/;
   const msgSplit = msg.trim().split(spacePattern)
-  const command = msgCommand(msgSplit)
+  const command = msgCommand(msgSplit, data)
 
   // Create the output
   const output = {...message, ...command};
@@ -33,7 +33,7 @@ export const onMessage = async (msg, io, socket, collection) => {
   io.emit('message', output);
 }
 
-const msgCommand = (args) => {
+const msgCommand = (args, data) => {
   if (args.length === 0 || !args[0].startsWith('/')) {
     // Not a command
     return {};
@@ -45,7 +45,9 @@ const msgCommand = (args) => {
       try {
         const input = args.slice(1).join(' ') || ' ';
         const roll = new DiceRoll(input);
-        return {type: 'roll', roll: roll.toJSON()};
+        const skill = data != null ? data.skill ?? null : null;
+        const character = data != null ? data.character ?? null : null;
+        return {type: 'roll', roll: roll.toJSON(), skill: skill, character: character};
       }
       catch (e) {
         console.log(e);

@@ -66,7 +66,8 @@ export default class App extends React.Component {
         <GameFeed sendMessage={Socket.sendMessage} feed={feed} 
           userSelected={userSelected} selectUserName={Socket.selectUserName} 
           username={username} editUserActive={editUserActive}
-          setEditUserActive={setEditUserActive} editUserName={Socket.editUserName}/>
+          setEditUserActive={setEditUserActive} editUserName={Socket.editUserName}
+          rollDice={Socket.rollDice}/>
       </div>
     );
   }

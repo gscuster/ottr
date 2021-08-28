@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { DiceButton } from './DiceButton';
 
-export const FeedForm = ({sendMessage}) => {
+export const FeedForm = ({sendMessage, rollDice}) => {
   const [message, setMessage] = useState("");
   
   const handleSubmit = (e) => {
@@ -13,6 +14,7 @@ export const FeedForm = ({sendMessage}) => {
 
   return (
     <form className="feed-form" onSubmit={handleSubmit}>
+      <DiceButton id='feed-dice' rating={0} rollDice={rollDice} height='32' width='32'/>
       <input type="text" 
         className="feed-input"
         autoComplete="off"

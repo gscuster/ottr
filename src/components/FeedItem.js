@@ -30,7 +30,13 @@ const getFeedClass = (feedItem, prev, next) => {
 const getFeedMessage = (feedItem) => {
   switch (feedItem.type) {
     case 'roll':
-      return feedItem.roll.output;
+      const rollText = feedItem.character != null ?
+          (feedItem.skill != null ? 
+          `${feedItem.character} rolled for ${feedItem.skill}. ` : '') :
+        feedItem.skill != null ? 
+          `Rolled for ${feedItem.skill}. ` : '';
+          
+      return rollText + feedItem.roll.output;
     default:
       return feedItem.message;
   }
