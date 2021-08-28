@@ -16,7 +16,7 @@ export const UsernameForm = ({socket, selectUserName}) => {
         value={userName}
         placeholder='UserName'
         onChange={e => setUserName(e.target.value)}/>
-      <button>Connect</button>
+      <button className='feed-button'>Connect</button>
     </form>
   )
 }
