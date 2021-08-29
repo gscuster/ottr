@@ -11,6 +11,7 @@ export default class App extends React.Component {
       feed: [],
       userSelected: false,
       username: null,
+      userID: null,
       editUserActive: false
     };
     this.addFeedItem = this.addFeedItem.bind(this);
@@ -31,7 +32,7 @@ export default class App extends React.Component {
   componentDidMount() {
     Socket.Socket.on('userSelected', (userSelected) => this.onUserSelected(userSelected));
     Socket.Socket.on('message', (content) => this.addFeedItem(content));
-    Socket.Socket.on('connectedAs', (username) => this.onConnected(username));
+    Socket.Socket.on('connectedAs', (username, userID) => this.onConnected(username, userID));
     Socket.Socket.on('feed', (feed) => this.replaceFeed(feed));
     Socket.setup();
   }
@@ -40,8 +41,8 @@ export default class App extends React.Component {
     Socket.teardown();
   }
 
-  onConnected(username) {
-    this.setState({username});
+  onConnected(username, userID) {
+    this.setState({username, userID});
   }
 
   onUserSelected(userSelected) {
@@ -58,7 +59,7 @@ export default class App extends React.Component {
   }
 
   render () {
-    const { feed, userSelected, username, editUserActive} = this.state;
+    const { feed, userSelected, username, editUserActive, userID} = this.state;
     const { setEditUserActive } = this;
     return (
       <div className="App">
@@ -67,7 +68,7 @@ export default class App extends React.Component {
           userSelected={userSelected} selectUserName={Socket.selectUserName} 
           username={username} editUserActive={editUserActive}
           setEditUserActive={setEditUserActive} editUserName={Socket.editUserName}
-          rollDice={Socket.rollDice}/>
+          rollDice={Socket.rollDice} userID={userID}/>
       </div>
     );
   }

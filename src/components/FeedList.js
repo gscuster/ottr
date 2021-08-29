@@ -35,12 +35,13 @@ export default class FeedList extends React.Component {
   }
 
   render() {
-    const {feed, divClass, listClass} = this.props;
+    const {feed, divClass, listClass, userID=''} = this.props;
     return (
       <div className={divClass} ref={this.listRef}>
         <ul className={listClass}>
           {feed.map((feedItem, i) => 
-            <FeedItem key={i} feedItem={feedItem} prev={feed[i-1]} next={feed[i+1]}/>)}
+            <FeedItem key={i} feedItem={feedItem} currentUser={userID === feedItem.userID}
+              prev={feed[i-1]} next={feed[i+1]}/>)}
         </ul>
       </div>
     );

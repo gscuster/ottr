@@ -6,8 +6,8 @@ import './FeedItem.css'
  * @param {*} param0 
  * @returns 
  */
-export const FeedItem = ({feedItem, prev, next}) => {
-  return <li className={getFeedClass(feedItem, prev, next)}><em>{feedItem.username}</em>: {getFeedMessage(feedItem)}</li>
+export const FeedItem = ({feedItem, prev, next, currentUser=false}) => {
+  return <li className={getFeedClass(feedItem, prev, next, currentUser)}><em>{feedItem.username}</em>: {getFeedMessage(feedItem)}</li>
 };
 
 const checkMatch = (item1, item2) => {
@@ -18,18 +18,19 @@ const checkMatch = (item1, item2) => {
   }
 }
 
-const getFeedClass = (feedItem, prev, next) => {
+const getFeedClass = (feedItem, prev, next, currentUser) => {
+  const userClass = currentUser ? '-user' : '';
   if (prev && checkMatch(feedItem, prev)) {
     if (next && checkMatch(feedItem, next)) {
-      return "feed-item middle";
+      return "feed-item" + userClass + " middle";
     } else {
-      return "feed-item last";
+      return "feed-item" + userClass + " last";
     }
   } else if (next && checkMatch(feedItem, next)) {
-    return "feed-item first";
+    return "feed-item" + userClass + " first";
   }
   else {
-    return "feed-item";
+    return "feed-item" + userClass;
   }
 }
 

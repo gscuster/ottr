@@ -14,7 +14,6 @@ let sessionData = [];
 
 // Get the collection from the database
 const collection = Database.connect();
-console.log(collection);
 
 /**
  * Middleware that sets up session either by using the provided sessionID or

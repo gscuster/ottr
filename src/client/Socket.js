@@ -80,7 +80,7 @@ function onSession(sessionID, userID, username) {
   localStorage.setItem("sessionID", sessionID);
   // save the ID of the user
   socket.userID = userID;
-  Socket.emit('connectedAs', username);
+  Socket.emit('connectedAs', username, userID);
 
   // Get feed messages
   socket.emit('getFeed');

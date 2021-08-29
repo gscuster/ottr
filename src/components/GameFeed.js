@@ -11,7 +11,7 @@ import { UsernameText } from './UsernameText';
  * @returns 
  */
 export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName, 
-  username, editUserActive, setEditUserActive, editUserName, rollDice}) => { 
+  username, editUserActive, setEditUserActive, editUserName, rollDice, userID=''}) => { 
   
   return (
     <div className="game-feed">
@@ -24,7 +24,7 @@ export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName,
             editUserName={editUserName}/>}
       </div>
 
-      <FeedList feed={feed} divClass={"body"} listClass={"feed-list"}/>
+      <FeedList feed={feed} divClass={"body"} listClass={"feed-list"} userID={userID}/>
     
       <div className="footer">
         {userSelected ? 
