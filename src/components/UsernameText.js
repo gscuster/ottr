@@ -4,6 +4,14 @@ import AccountEdit from '../res/mdi/account-edit.svg'
 import React, { useState } from "react";
 import './UsernameText.css';
 
+/**
+ * React component. Contains an EditableText component and an EditButton.
+ * Pressing the EditButton submits the opposite of editActive to 
+ * setEditUserActive. If editActive is true, the editButton will also submit
+ * the text from EditableText to editUsername.
+ * @param {*} param0 
+ * @returns 
+ */
 export const UsernameText = ({username, editActive, editUserName, setEditUserActive}) => {
   const [userName, setUserName] = useState("");
   

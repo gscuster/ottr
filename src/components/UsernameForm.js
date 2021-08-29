@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 
+/**
+ * React component. Form for feed. Could likely be combined with FeedForm at
+ * some point.
+ * @param {*} param0 
+ * @returns 
+ */
 export const UsernameForm = ({socket, selectUserName}) => {
   const [userName, setUserName] = useState("");
   

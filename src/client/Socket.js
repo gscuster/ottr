@@ -6,6 +6,9 @@ const address = window.location.hostname + ':' + port;
 const socket = io(address, {autoConnect: false});
 export const Socket = new EventEmitter();
 
+/**
+ * Register listeners for events
+ */
 export const setup = () => {
   socket.on('connect', () => onConnectionStateUpdate());
   socket.on('disconnect', () => onConnectionStateUpdate());
@@ -27,6 +30,9 @@ export const setup = () => {
   }
 }
 
+/**
+ * Remove all listeners from events
+ */
 export const teardown = () => {
   socket.off('connect');
   socket.off('disconnect');
@@ -35,6 +41,10 @@ export const teardown = () => {
   socket.off('connect_error');
 }
 
+/**
+ * Handle issues with connection
+ * @param {Error} err 
+ */
 function onConnectionError(err) {
   if (err.message === "invalid username") {
     // Reset user selection
@@ -44,13 +54,26 @@ function onConnectionError(err) {
   }
 }
 
+/**
+ * Unused
+ */
 function onConnectionStateUpdate() {
 }
 
+/**
+ * Pass on received messages
+ * @param {Object} content 
+ */
 function onMessage(content) {
   Socket.emit('message', content);
 }
 
+/**
+ * Sets and stores session information
+ * @param {String} sessionID 
+ * @param {String} userID 
+ * @param {String} username 
+ */
 function onSession(sessionID, userID, username) {
   socket.auth = { sessionID };
   // store it in the localStorage
@@ -63,12 +86,20 @@ function onSession(sessionID, userID, username) {
   socket.emit('getFeed');
 }
 
+/**
+ * Submit a change to the username
+ * @param {String} username 
+ */
 export const editUserName = (username) => {
   if (username) {
     socket.emit('changeUserName', username);
   }
 }
 
+/**
+ * Send a dice roll message to the server
+ * @param {Event} evt 
+ */
 export const rollDice = (evt) => {
   console.log(evt);
   const defaultRoll = '/r 4dF';
@@ -80,10 +111,18 @@ export const rollDice = (evt) => {
   socket.emit('message', message, {skill: skill, character: character});
 }
 
+/**
+ * Send a message to the server
+ * @param {String} message 
+ */
 export const sendMessage = (message) => {
   socket.emit('message', message);
 }
 
+/**
+ * Perform the initial connection setup with the given username
+ * @param {String} username 
+ */
 export const selectUserName = (username) => {
   if (username) {
     socket.auth = { username };

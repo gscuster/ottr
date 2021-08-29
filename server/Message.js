@@ -1,5 +1,13 @@
 import { DiceRoll } from 'rpg-dice-roller';
 
+/**
+ * Handles messages the server receives.
+ * @param {String} msg 
+ * @param {Object} data 
+ * @param {Server} io 
+ * @param {Socket} socket 
+ * @param {Collection} collection 
+ */
 export const onMessage = async (msg, data, io, socket, collection) => {
   console.log('Received: ' + msg);
 
@@ -39,6 +47,12 @@ export const onMessage = async (msg, data, io, socket, collection) => {
   io.emit('message', output);
 }
 
+/**
+ * Processes commands within a message
+ * @param {Array<string>} args 
+ * @param {Object} data 
+ * @returns 
+ */
 const msgCommand = (args, data) => {
   if (args.length === 0 || !args[0].startsWith('/')) {
     // Not a command

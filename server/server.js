@@ -16,6 +16,10 @@ let sessionData = [];
 const collection = Database.connect();
 console.log(collection);
 
+/**
+ * Middleware that sets up session either by using the provided sessionID or
+ * creating a new one.
+ */
 io.use(async (socket, next) => {
   // Get the session data from the database, if it exists
   try {
@@ -58,9 +62,15 @@ io.use(async (socket, next) => {
   next();
 });
 
+/**
+ * Set things up once we have a connection
+ */
 io.on('connection', socket => {
   console.log(`connect: ${socket.id} for user: ${socket.username}`);
 
+  /**
+   * Let everyone know a user has disconnected
+   */
   socket.on('disconnect', () => {
     console.log(`disconnect: ${socket.id}`);
     // Create basic output object
@@ -73,8 +83,10 @@ io.on('connection', socket => {
     io.emit('message', systemMsg);
   });
 
+  // Pass incoming messages off
   socket.on('message', (msg, data=null) => Message.onMessage(msg, data, io, socket, collection));
 
+  // Get the feed from the database on request
   socket.on('getFeed', async () => {
     let feed;
     try {
@@ -86,6 +98,9 @@ io.on('connection', socket => {
     socket.emit('feed', feed);
   });
 
+  /**
+   * Handles a requested username change.
+   */
   socket.on('changeUserName', async (username) => {
     if (username) {
       socket.username = username;
@@ -122,7 +137,7 @@ io.on('connection', socket => {
     username: socket.username
   });
 
-  // Create basic output object
+  // Let everyone know a user has connected
   const systemMsg = {
     type: 'message',
     username: 'System',

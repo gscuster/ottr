@@ -1,5 +1,11 @@
 import './FeedItem.css'
 
+/**
+ * React component. Formats a list item based on the supplied feedItem and
+ * the surrounding items.
+ * @param {*} param0 
+ * @returns 
+ */
 export const FeedItem = ({feedItem, prev, next}) => {
   return <li className={getFeedClass(feedItem, prev, next)}><em>{feedItem.username}</em>: {getFeedMessage(feedItem)}</li>
 };

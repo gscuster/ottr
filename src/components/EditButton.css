@@ -1,7 +1,13 @@
-.editButton {
+.edit-button-icon {
   padding: 0;
   margin-left: 1em;
 }
-.editButton:active {
+.edit-button-icon:active {
   background-color: #222222;
+}
+
+.edit-button {
+  background: transparent;
+  outline: none;
+  border: none;
 }

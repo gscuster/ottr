@@ -4,6 +4,12 @@ import {FeedForm} from './FeedForm.js';
 import {UsernameForm} from './UsernameForm.js';
 import { UsernameText } from './UsernameText';
 
+/**
+ * React component. Game feed with some text and the username as a header, feed
+ * list as the body, and a feed form as the footer.
+ * @param {*} param0 
+ * @returns 
+ */
 export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName, 
   username, editUserActive, setEditUserActive, editUserName, rollDice}) => { 
   

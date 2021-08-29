@@ -1,6 +1,9 @@
 import {FeedItem} from './FeedItem.js';
 import React from 'react';
 
+/**
+ * React component. List of feed items.
+ */
 export default class FeedList extends React.Component {
   constructor(props) {
     super(props);

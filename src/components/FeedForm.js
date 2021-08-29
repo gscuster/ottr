@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { DiceButton } from './DiceButton';
 
+/**
+ * React component. Form with text, a button to send the text, and a dice button.
+ * @param {*} param0 
+ * @returns 
+ */
 export const FeedForm = ({sendMessage, rollDice}) => {
   const [message, setMessage] = useState("");
   
