@@ -28,7 +28,13 @@ export const onMessage = async (msg, data, io, socket, collection) => {
     }
   };
   const options = { upsert: true };
-  (await collection).updateOne(filter, updateDoc, options);
+  try {
+    (await collection).updateOne(filter, updateDoc, options);
+  }
+  catch {
+    // Do nothing
+  }
+  
 
   io.emit('message', output);
 }

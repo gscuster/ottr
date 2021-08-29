@@ -10,12 +10,16 @@ export const connect = async () => {
 
   // Create a new MongoClient
   const client = new MongoClient(uri);
+  
+  try {
+    await client.connect()
 
-  await client.connect()
-
-  const collection = client.db('ottr').collection('default');
-
+  const collection = await client.db('ottr').collection('default');
   return collection;
+  }
+  catch {
+    return null;
+  }
 }
 
 export const updateArray = async (collection, id, key, value) => {
@@ -26,6 +30,12 @@ export const updateArray = async (collection, id, key, value) => {
       [key]: value
     }
   };
-  (await collection).updateOne(filter, updateDoc, options);
+  try {
+    (await collection).updateOne(filter, updateDoc, options);
+  }
+  catch {
+    // Do nothing
+  }
+  
 }
 

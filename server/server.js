@@ -14,10 +14,17 @@ let sessionData = [];
 
 // Get the collection from the database
 const collection = Database.connect();
+console.log(collection);
 
 io.use(async (socket, next) => {
   // Get the session data from the database, if it exists
-  sessionData = (await (await collection).findOne({'_id': 'sessionData'})).sessionData ?? [];
+  try {
+    sessionData = (await (await collection).findOne({'_id': 'sessionData'})).sessionData ?? [];
+  }
+  catch {
+    sessionData = [];
+  }
+  
   const sessionID = socket.handshake.auth.sessionID;
 
   if (sessionID) {
@@ -69,8 +76,13 @@ io.on('connection', socket => {
   socket.on('message', (msg, data=null) => Message.onMessage(msg, data, io, socket, collection));
 
   socket.on('getFeed', async () => {
-    const feed = (await (await collection).findOne({'_id': 'game_data'})).main_feed ?? [];
-    console.log('Sending back feed');
+    let feed;
+    try {
+      feed = (await (await collection).findOne({'_id': 'game_data'})).main_feed ?? [];
+    }
+    catch {
+      feed = [];
+    }
     socket.emit('feed', feed);
   });
 
@@ -93,7 +105,12 @@ io.on('connection', socket => {
           'sessionData.$.username': username
         }
       };
-      (await collection).updateOne(filter, updateDoc);
+      try {
+        (await collection).updateOne(filter, updateDoc);
+      }
+      catch {
+        // Do nothing
+      }
 
       socket.emit('username_edited', username);
     }
