@@ -1,18 +1,20 @@
 import './App.css';
 import React from 'react';
-import {TabWindow} from './components/TabWindow';
-import {GameFeed} from './components/GameFeed';
+import { TabWindow } from './components/TabWindow';
+import { GameFeed } from './components/GameFeed';
+import { GameSelector } from './components/GameSelector';
 import * as Socket from './client/Socket'
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      editUserActive: false,
       feed: [],
-      userSelected: false,
-      username: null,
+      gameSelected: null,
       userID: null,
-      editUserActive: false
+      username: null,
+      userSelected: false
     };
     this.addFeedItem = this.addFeedItem.bind(this);
     this.onUserSelected = this.onUserSelected.bind(this);
@@ -59,16 +61,22 @@ export default class App extends React.Component {
   }
 
   render () {
-    const { feed, userSelected, username, editUserActive, userID} = this.state;
+    const { feed, userSelected, username, editUserActive, userID, 
+      gameSelected} = this.state;
     const { setEditUserActive } = this;
     return (
       <div className="App">
-        <TabWindow/>
-        <GameFeed sendMessage={Socket.sendMessage} feed={feed} 
-          userSelected={userSelected} selectUserName={Socket.selectUserName} 
-          username={username} editUserActive={editUserActive}
-          setEditUserActive={setEditUserActive} editUserName={Socket.editUserName}
-          rollDice={Socket.rollDice} userID={userID}/>
+        {
+          gameSelected != null ?
+            [<TabWindow/>,
+            <GameFeed sendMessage={Socket.sendMessage} feed={feed} 
+              userSelected={userSelected} selectUserName={Socket.selectUserName} 
+              username={username} editUserActive={editUserActive}
+              setEditUserActive={setEditUserActive} editUserName={Socket.editUserName}
+              rollDice={Socket.rollDice} userID={userID}/>] :
+            <GameSelector gameList={['gameA', 'gameB', 'gameC']}/>
+        }
+        
       </div>
     );
   }
