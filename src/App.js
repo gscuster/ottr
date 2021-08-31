@@ -1,6 +1,6 @@
 import './App.css';
 import React from 'react';
-import {Canvas} from './components/Canvas';
+import {TabWindow} from './components/TabWindow';
 import {GameFeed} from './components/GameFeed';
 import * as Socket from './client/Socket'
 
@@ -63,7 +63,7 @@ export default class App extends React.Component {
     const { setEditUserActive } = this;
     return (
       <div className="App">
-        <Canvas/>
+        <TabWindow/>
         <GameFeed sendMessage={Socket.sendMessage} feed={feed} 
           userSelected={userSelected} selectUserName={Socket.selectUserName} 
           username={username} editUserActive={editUserActive}
