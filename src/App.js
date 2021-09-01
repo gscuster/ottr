@@ -11,13 +11,12 @@ export default class App extends React.Component {
     this.state = {
       editUserActive: false,
       feed: [],
-      gameSelected: null,
+      gameSelected: true,
       userID: null,
       username: null,
       userSelected: false
     };
     this.addFeedItem = this.addFeedItem.bind(this);
-    this.onUserSelected = this.onUserSelected.bind(this);
     this.onConnected = this.onConnected.bind(this);
     this.replaceFeed = this.replaceFeed.bind(this);
     this.setEditUserActive = this.setEditUserActive.bind(this);
@@ -32,9 +31,9 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    Socket.Socket.on('userSelected', (userSelected) => this.onUserSelected(userSelected));
     Socket.Socket.on('message', (content) => this.addFeedItem(content));
-    Socket.Socket.on('connectedAs', (username, userID) => this.onConnected(username, userID));
+    Socket.Socket.on('connectedAs', (username, userID, userSelected) => 
+      this.onConnected(username, userID, userSelected));
     Socket.Socket.on('feed', (feed) => this.replaceFeed(feed));
     Socket.setup();
   }
@@ -43,12 +42,9 @@ export default class App extends React.Component {
     Socket.teardown();
   }
 
-  onConnected(username, userID) {
-    this.setState({username, userID});
-  }
-
-  onUserSelected(userSelected) {
-    this.setState({userSelected});
+  onConnected(username, userID, userSelected) {
+    console.log(`We connected as ${username} with id ${userID}: ${userSelected}`);
+    this.setState({username, userID, userSelected});
   }
 
   replaceFeed(feed) {
@@ -68,13 +64,14 @@ export default class App extends React.Component {
       <div className="App">
         {
           gameSelected != null ?
-            [<TabWindow/>,
+            [<TabWindow key='tabwindow1'/>,
             <GameFeed sendMessage={Socket.sendMessage} feed={feed} 
               userSelected={userSelected} selectUserName={Socket.selectUserName} 
               username={username} editUserActive={editUserActive}
               setEditUserActive={setEditUserActive} editUserName={Socket.editUserName}
-              rollDice={Socket.rollDice} userID={userID}/>] :
-            <GameSelector gameList={['gameA', 'gameB', 'gameC']}/>
+              rollDice={Socket.rollDice} userID={userID} key='gamefeed1'/>] :
+            <GameSelector gameList={['gameA', 'gameB', 'gameC']}
+              selectGame={Socket.selectGame}/>
         }
         
       </div>

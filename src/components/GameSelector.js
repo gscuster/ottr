@@ -1,7 +1,7 @@
 import './GameSelector.css';
 import React, { useState } from "react";
 
-export const GameSelector = ({gameList=[]}) => {
+export const GameSelector = ({gameList=[], selectGame}) => {
   const [newGameSelected, setNewGameSelected] = useState(false);
   const [gameName, setGameName] = useState('game');
 
@@ -13,6 +13,10 @@ export const GameSelector = ({gameList=[]}) => {
     e.preventDefault();
   }
 
+  const onSelect = (e) => {
+    selectGame(gameName, newGameSelected);
+  }
+
   return (
     <div className='game-selector'>
       <h2>Select or create a game</h2>
@@ -21,12 +25,13 @@ export const GameSelector = ({gameList=[]}) => {
           {gameList.map( (game, key) => (
             <option key={key} value={game}>{game}</option>
           ))}
-          <option value='newgame'>&lt;New Game&gt;</option>
+          <option value='newgame' key='newgame'>&lt;New Game&gt;</option>
         </select>
         {newGameSelected && 
           <input type='text' className='new-game-input' defaultValue='game' 
             onChange={e => setGameName(e.target.value)} size='12'/>}
-        <button type='button' className='selector-button'>Select Game</button>
+        <button type='button' className='selector-button'
+          onClick={onSelect}>Select Game</button>
       </form>
     </div>
     

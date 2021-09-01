@@ -15,7 +15,7 @@ export const setup = () => {
   socket.on('message', (content) => onMessage(content));
   socket.on('session', ({sessionID, userID, username}) => onSession(sessionID, userID, username));
   socket.on('connect_error', (err) => onConnectionError(err));
-  socket.on('username_edited', (username) => {Socket.emit('connectedAs', username)});
+  socket.on('username_edited', (username) => {Socket.emit('connectedAs', username, socket.userID, true)});
   socket.on('feed', (feed) => {Socket.emit('feed', feed)});
 
   // Get stored session ID
@@ -25,8 +25,6 @@ export const setup = () => {
   if (sessionID) {
     socket.auth = { sessionID };
     socket.connect();
-    const userSelected = true;
-    Socket.emit('userSelected', userSelected);
   }
 }
 
@@ -48,9 +46,7 @@ export const teardown = () => {
 function onConnectionError(err) {
   if (err.message === "invalid username") {
     // Reset user selection
-    const userSelected = false;
     console.log(`Connection error`);
-    Socket.emit('userSelected', userSelected);
   }
 }
 
@@ -80,8 +76,9 @@ function onSession(sessionID, userID, username) {
   localStorage.setItem("sessionID", sessionID);
   // save the ID of the user
   socket.userID = userID;
-  Socket.emit('connectedAs', username, userID);
-
+  const userSelected = true;
+  Socket.emit('connectedAs', username, userID, userSelected);
+  
   // Get feed messages
   socket.emit('getFeed');
 }
@@ -101,7 +98,6 @@ export const editUserName = (username) => {
  * @param {Event} evt 
  */
 export const rollDice = (evt) => {
-  console.log(evt);
   const defaultRoll = '/r 4dF';
   const modifier = evt.target.getAttribute('rating');
   const skill = evt.target.getAttribute('skill');
@@ -120,6 +116,14 @@ export const sendMessage = (message) => {
 }
 
 /**
+ * Sends game selection to the server
+ * @param {Event} evt 
+ */
+export const selectGame = (gameName, newGame) => {
+  socket.emit('selectGame', gameName, newGame);
+}
+
+/**
  * Perform the initial connection setup with the given username
  * @param {String} username 
  */
@@ -127,7 +131,5 @@ export const selectUserName = (username) => {
   if (username) {
     socket.auth = { username };
     socket.connect();
-    const userSelected = true;
-    Socket.emit('userSelected', userSelected);
   }
 }
