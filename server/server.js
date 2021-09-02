@@ -128,6 +128,14 @@ io.on('connection', socket => {
 
   // Set the game
   socket.on('selectGame', async (gameName) => {
+    // Check for a valid game name
+    const pattern = /^[A-Za-z0-9_-]{1,48}$/;
+    if (!gameName.match(pattern)) {
+      socket.emit('gameState', gameState);
+      return;
+    }
+    
+    // Get the collection for this game
     try {
       gameCollection = await Database.getCollection(client, gameName);
       if (!gameState.gameList.includes(gameName)) {

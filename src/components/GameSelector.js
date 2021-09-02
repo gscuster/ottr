@@ -13,13 +13,16 @@ export const GameSelector = ({gameList=[], selectGame, waiting=false}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (newGameSelected) {
-      // Submit input name
-      selectGame(gameName);
-    }
-    else {
-      // Submit value from selector
-      selectGame(e.target[0].value);
+    // Check that the form is valid
+    if (e.target.checkValidity()) {
+      if (newGameSelected) {
+        // Submit input name
+        selectGame(gameName);
+      }
+      else {
+        // Submit value from selector
+        selectGame(e.target[0].value);
+      }
     }
   }
 
@@ -35,7 +38,9 @@ export const GameSelector = ({gameList=[], selectGame, waiting=false}) => {
         </select>
         {newGameSelected && 
           <input type='text' className='new-game-input' defaultValue='game' 
-            onChange={e => setGameName(e.target.value)} size='12'/>}
+            onChange={e => setGameName(e.target.value)} size='12' maxLength='48'
+            pattern='[A-Za-z0-9_\-]{1,48}' 
+            title='Use alphnumeric characters or "_" and "-" only.'/>}
         <button className='selector-button' disabled={waiting}>Select Game</button>
       </form>
     </div>
