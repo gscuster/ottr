@@ -25,6 +25,7 @@ export const setup = () => {
   if (sessionID) {
     socket.auth = { sessionID };
     socket.connect();
+    Socket.emit('setConnectionStatus', 'pending');
   }
 }
 
@@ -47,6 +48,7 @@ function onConnectionError(err) {
   if (err.message === "invalid username") {
     // Reset user selection
     console.log(`Connection error`);
+    Socket.emit('setConnectionStatus', 'no username');
   }
 }
 
@@ -76,7 +78,7 @@ function onSession(sessionID, userID, username) {
   localStorage.setItem("sessionID", sessionID);
   // save the ID of the user
   socket.userID = userID;
-  const userSelected = true;
+  const userSelected = 'connected';
   Socket.emit('connectedAs', username, userID, userSelected);
   
   // Get feed messages
@@ -131,5 +133,6 @@ export const selectUserName = (username) => {
   if (username) {
     socket.auth = { username };
     socket.connect();
+    Socket.emit('setConnectionStatus', 'pending');
   }
 }
