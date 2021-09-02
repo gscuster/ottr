@@ -1,0 +1,17 @@
+.loading-page{
+  text-align: center;
+  width: 100vw;
+  background-color: #ccc;
+}
+.username-input {
+  background: #fff;
+  margin: 0.5em;
+}
+.username-button { 
+  background: #444444; 
+  border: none;
+  padding: 0.25rem 1rem;
+  margin: 0.25rem; 
+  border-radius: 5px;
+  color: #fff; 
+}

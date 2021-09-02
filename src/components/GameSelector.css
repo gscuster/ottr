@@ -1,0 +1,17 @@
+.game-selector {
+  text-align: center;
+  width: 100vw;
+  background-color: #ccc;
+}
+.new-game-input {
+  background: #fff;
+  margin: 0.5em;
+}
+.selector-button { 
+  background: #444444; 
+  border: none;
+  padding: 0.25rem 1rem;
+  margin: 0.25rem; 
+  border-radius: 5px;
+  color: #fff; 
+}

@@ -1,7 +1,6 @@
 import './GameFeed.css'
 import FeedList from './FeedList.js';
 import {FeedForm} from './FeedForm.js';
-import {UsernameForm} from './UsernameForm.js';
 import { UsernameText } from './UsernameText';
 
 /**
@@ -10,14 +9,14 @@ import { UsernameText } from './UsernameText';
  * @param {*} param0 
  * @returns 
  */
-export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName, 
-  username, editUserActive, setEditUserActive, editUserName, rollDice, userID=''}) => { 
+export const GameFeed = ({feed=[], sendMessage, username, editUserActive, 
+  setEditUserActive, editUserName, rollDice, userID=''}) => { 
   
   return (
     <div className="game-feed">
       <div className="header">
         <h3 className="feed-title">Open TableTop RPG</h3>
-        {(userSelected && username) && 
+        {username && 
           <UsernameText username={username} 
             editActive={editUserActive}
             setEditUserActive={setEditUserActive}
@@ -27,11 +26,7 @@ export const GameFeed = ({feed=[], sendMessage, userSelected, selectUserName,
       <FeedList feed={feed} divClass={"body"} listClass={"feed-list"} userID={userID}/>
     
       <div className="footer">
-        {userSelected ? 
-          // If we've picked a user, use normal feed input
-          <FeedForm sendMessage={sendMessage} rollDice={rollDice}/> : 
-          // Otherwise, prompt for username selection
-          <UsernameForm selectUserName={selectUserName}/>}
+        <FeedForm sendMessage={sendMessage} rollDice={rollDice}/>
       </div>
     </div>
   );

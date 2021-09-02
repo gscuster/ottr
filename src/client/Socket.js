@@ -13,20 +13,23 @@ export const setup = () => {
   socket.on('connect', () => onConnectionStateUpdate());
   socket.on('disconnect', () => onConnectionStateUpdate());
   socket.on('message', (content) => onMessage(content));
-  socket.on('session', ({sessionID, userID, username}) => onSession(sessionID, userID, username));
+  socket.on('session', ({sessionID, userID, username}) => 
+    onSession(sessionID, userID, username));
   socket.on('connect_error', (err) => onConnectionError(err));
-  socket.on('username_edited', (username) => {Socket.emit('connectedAs', username)});
+  socket.on('username_edited', (username) => 
+    {Socket.emit('connectedAs', username, socket.userID, true)});
   socket.on('feed', (feed) => {Socket.emit('feed', feed)});
+  socket.on('gameState', (gameState) => {Socket.emit('gameState', gameState)});
 
   // Get stored session ID
   const sessionID = localStorage.getItem("sessionID");
 
   // If we've got a stored session ID, good to go
   if (sessionID) {
+    console.log(`Trying to connect with sessionID ${sessionID}`)
     socket.auth = { sessionID };
     socket.connect();
-    const userSelected = true;
-    Socket.emit('userSelected', userSelected);
+    Socket.emit('setConnectionStatus', 'pending');
   }
 }
 
@@ -48,9 +51,8 @@ export const teardown = () => {
 function onConnectionError(err) {
   if (err.message === "invalid username") {
     // Reset user selection
-    const userSelected = false;
     console.log(`Connection error`);
-    Socket.emit('userSelected', userSelected);
+    Socket.emit('setConnectionStatus', 'no username');
   }
 }
 
@@ -80,8 +82,12 @@ function onSession(sessionID, userID, username) {
   localStorage.setItem("sessionID", sessionID);
   // save the ID of the user
   socket.userID = userID;
-  Socket.emit('connectedAs', username, userID);
+  const userSelected = 'connected';
+  Socket.emit('connectedAs', username, userID, userSelected);
 
+  // Get current game state
+  socket.emit('getGameState');
+  
   // Get feed messages
   socket.emit('getFeed');
 }
@@ -101,7 +107,6 @@ export const editUserName = (username) => {
  * @param {Event} evt 
  */
 export const rollDice = (evt) => {
-  console.log(evt);
   const defaultRoll = '/r 4dF';
   const modifier = evt.target.getAttribute('rating');
   const skill = evt.target.getAttribute('skill');
@@ -120,6 +125,14 @@ export const sendMessage = (message) => {
 }
 
 /**
+ * Sends game selection to the server
+ * @param {Event} evt 
+ */
+export const selectGame = (gameName) => {
+  socket.emit('selectGame', gameName);
+}
+
+/**
  * Perform the initial connection setup with the given username
  * @param {String} username 
  */
@@ -127,7 +140,6 @@ export const selectUserName = (username) => {
   if (username) {
     socket.auth = { username };
     socket.connect();
-    const userSelected = true;
-    Socket.emit('userSelected', userSelected);
+    Socket.emit('setConnectionStatus', 'pending');
   }
 }
