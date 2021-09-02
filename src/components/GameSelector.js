@@ -1,20 +1,26 @@
 import './GameSelector.css';
 import React, { useState } from "react";
 
-export const GameSelector = ({gameList=[], selectGame}) => {
-  const [newGameSelected, setNewGameSelected] = useState(false);
+export const GameSelector = ({gameList=[], selectGame, waiting=false}) => {
+  const initSelected = gameList.length === 0;
+  const [newGameSelected, setNewGameSelected] = useState(initSelected);
   const [gameName, setGameName] = useState('game');
 
   const onChangeSelector = (e) => {
+    setGameName(e.target.value);
     e.target.value === 'newgame' ? setNewGameSelected(true) : setNewGameSelected(false);
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  }
-
-  const onSelect = (e) => {
-    selectGame(gameName, newGameSelected);
+    if (newGameSelected) {
+      // Submit input name
+      selectGame(gameName);
+    }
+    else {
+      // Submit value from selector
+      selectGame(e.target[0].value);
+    }
   }
 
   return (
@@ -30,8 +36,7 @@ export const GameSelector = ({gameList=[], selectGame}) => {
         {newGameSelected && 
           <input type='text' className='new-game-input' defaultValue='game' 
             onChange={e => setGameName(e.target.value)} size='12'/>}
-        <button type='button' className='selector-button'
-          onClick={onSelect}>Select Game</button>
+        <button className='selector-button' disabled={waiting}>Select Game</button>
       </form>
     </div>
     

@@ -11,9 +11,16 @@ const io = new Server(server);
 const port = 4000;
 
 let sessionData = [];
+let gameState = {gameActive: null, gameList: []};
 
 // Get the collection from the database
-const collection = Database.connect();
+const client = Database.connect();
+const collection = Database.getCollection(client, 'default');
+let gameCollection = null;
+
+const setGameState = (newGameState) => {
+  gameState = newGameState;
+}
 
 /**
  * Middleware that sets up session either by using the provided sessionID or
@@ -27,7 +34,7 @@ io.use(async (socket, next) => {
   catch {
     sessionData = [];
   }
-  
+
   const sessionID = socket.handshake.auth.sessionID;
 
   if (sessionID) {
@@ -84,6 +91,28 @@ io.on('connection', socket => {
 
   // Pass incoming messages off
   socket.on('message', (msg, data=null) => Message.onMessage(msg, data, io, socket, collection));
+  
+  // Get the game state on request
+  socket.on('getGameState', async () => {
+    if (gameState.gameActive != null) {
+      // We're in a game, send it back
+      socket.emit('gameState', gameState);
+      console.log('We are in a game. Sending the state');
+    }
+    else {
+      // We're not in a game, get a list of available games to send back
+      let gameList;
+      try {
+        gameList = (await (await collection).findOne({'_id': 'game_data'})).game_list ?? [];
+      }
+      catch {
+        gameList = [];
+      }
+      const newGameState = {gameActive: null, gameList: gameList};
+      setGameState(newGameState);
+      socket.emit('gameState', newGameState);
+    }
+  });
 
   // Get the feed from the database on request
   socket.on('getFeed', async () => {
@@ -95,6 +124,33 @@ io.on('connection', socket => {
       feed = [];
     }
     socket.emit('feed', feed);
+  });
+
+  // Set the game
+  socket.on('selectGame', async (gameName) => {
+    try {
+      gameCollection = await Database.getCollection(client, gameName);
+      if (!gameState.gameList.includes(gameName)) {
+        console.log('Adding game to list');
+        const newGameState = {gameActive: gameName, gameList: [...gameState.gameList, gameName]}
+        setGameState(newGameState);
+        // Add the new game to the list of games
+        Database.updateArray(collection, 'game_data', 'game_list', gameName);
+        socket.emit('gameState', newGameState);
+        console.log('Sending state update with active game');
+      }
+      else {
+        const newGameState = {gameActive: gameName, gameList: [...gameState.gameList]}
+        setGameState(newGameState);
+        socket.emit('gameState', newGameState);
+        console.log('Sending state update with active game');
+      }
+    }
+    catch {
+      socket.emit('gameState', gameState);
+      console.log('Something went wrong, just sending current state back');
+    }
+    
   });
 
   /**

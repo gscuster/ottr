@@ -13,16 +13,20 @@ export const setup = () => {
   socket.on('connect', () => onConnectionStateUpdate());
   socket.on('disconnect', () => onConnectionStateUpdate());
   socket.on('message', (content) => onMessage(content));
-  socket.on('session', ({sessionID, userID, username}) => onSession(sessionID, userID, username));
+  socket.on('session', ({sessionID, userID, username}) => 
+    onSession(sessionID, userID, username));
   socket.on('connect_error', (err) => onConnectionError(err));
-  socket.on('username_edited', (username) => {Socket.emit('connectedAs', username, socket.userID, true)});
+  socket.on('username_edited', (username) => 
+    {Socket.emit('connectedAs', username, socket.userID, true)});
   socket.on('feed', (feed) => {Socket.emit('feed', feed)});
+  socket.on('gameState', (gameState) => {Socket.emit('gameState', gameState)});
 
   // Get stored session ID
   const sessionID = localStorage.getItem("sessionID");
 
   // If we've got a stored session ID, good to go
   if (sessionID) {
+    console.log(`Trying to connect with sessionID ${sessionID}`)
     socket.auth = { sessionID };
     socket.connect();
     Socket.emit('setConnectionStatus', 'pending');
@@ -80,6 +84,9 @@ function onSession(sessionID, userID, username) {
   socket.userID = userID;
   const userSelected = 'connected';
   Socket.emit('connectedAs', username, userID, userSelected);
+
+  // Get current game state
+  socket.emit('getGameState');
   
   // Get feed messages
   socket.emit('getFeed');
@@ -121,8 +128,8 @@ export const sendMessage = (message) => {
  * Sends game selection to the server
  * @param {Event} evt 
  */
-export const selectGame = (gameName, newGame) => {
-  socket.emit('selectGame', gameName, newGame);
+export const selectGame = (gameName) => {
+  socket.emit('selectGame', gameName);
 }
 
 /**

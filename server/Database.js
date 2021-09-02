@@ -4,7 +4,7 @@ import * as Authentication from './Authentication.js'
 /**
  * Connects to a mongo database and returns the collection 'default'. Returns
  * null if something goes wrong.
- * @returns Collection
+ * @returns {MongoClient, Collection}
  */
 export const connect = async () => {
   const dbName = Authentication.getDatabaseName();
@@ -18,9 +18,17 @@ export const connect = async () => {
   
   try {
     await client.connect()
+    return client;
+  }
+  catch {
+    return null;
+  }
+}
 
-  const collection = await client.db('ottr').collection('default');
-  return collection;
+export const getCollection = async (client, collectionName) => {
+  try {
+    const collection = await (await client).db('ottr').collection(collectionName);
+    return collection;
   }
   catch {
     return null;
@@ -46,8 +54,10 @@ export const updateArray = async (collection, id, key, value) => {
   try {
     (await collection).updateOne(filter, updateDoc, options);
   }
-  catch {
+  catch (error) {
     // Do nothing
+    console.log(error);
+    console.log(`Failed to update ${id}.${key} with ${value}`);
   }
   
 }

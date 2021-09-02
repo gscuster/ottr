@@ -12,7 +12,8 @@ export default class App extends React.Component {
     this.state = {
       editUserActive: false,
       feed: [],
-      gameSelected: true,
+      gameState: {currentGame: null, gameList: []},
+      waitingOnResponse: false,
       userID: null,
       username: null,
       connectionStatus: 'no username'
@@ -22,6 +23,7 @@ export default class App extends React.Component {
     this.replaceFeed = this.replaceFeed.bind(this);
     this.setEditUserActive = this.setEditUserActive.bind(this);
     this.setConnectionStatus = this.setConnectionStatus.bind(this);
+    this.setGameState = this.setGameState.bind(this);
   }
 
   addFeedItem(item) {
@@ -36,6 +38,7 @@ export default class App extends React.Component {
     Socket.Socket.on('message', (content) => this.addFeedItem(content));
     Socket.Socket.on('connectedAs', (username, userID, connectionStatus) => 
       this.onConnected(username, userID, connectionStatus));
+    Socket.Socket.on('gameState', (gameState) => this.setGameState(gameState));
     Socket.Socket.on('feed', (feed) => this.replaceFeed(feed));
     Socket.Socket.on('setConnectionStatus', (connectionStatus => 
       this.setConnectionStatus(connectionStatus)))
@@ -59,6 +62,12 @@ export default class App extends React.Component {
     this.setState({connectionStatus});
   }
 
+  setGameState(gameState) {
+    console.log('Setting game state')
+    console.log(gameState);
+    this.setState({gameState, waitingOnResponse: false});
+  }
+
   setEditUserActive(editUserActive) {
     this.setState({editUserActive});
     return false;
@@ -66,7 +75,7 @@ export default class App extends React.Component {
 
   render () {
     const { feed, connectionStatus, username, editUserActive, userID, 
-      gameSelected} = this.state;
+      gameState, waitingOnResponse} = this.state;
     const { setEditUserActive } = this;
     return (
       <div className="App">
@@ -74,14 +83,14 @@ export default class App extends React.Component {
           connectionStatus !== 'connected' ?
             <LoadingPage connectionStatus={connectionStatus} 
               selectUserName={Socket.selectUserName}/> :
-          (gameSelected != null ?
+          (gameState.gameActive != null ?
             [<TabWindow key='tabwindow1'/>,
             <GameFeed sendMessage={Socket.sendMessage} feed={feed} 
               username={username} editUserActive={editUserActive}
               setEditUserActive={setEditUserActive} editUserName={Socket.editUserName}
               rollDice={Socket.rollDice} userID={userID} key='gamefeed1'/>] :
-            <GameSelector gameList={['gameA', 'gameB', 'gameC']}
-              selectGame={Socket.selectGame}/>)
+            <GameSelector gameList={gameState.gameList}
+              selectGame={Socket.selectGame} waiting={waitingOnResponse}/>)
         }
         
       </div>
