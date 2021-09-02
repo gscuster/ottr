@@ -77,7 +77,6 @@ export default class App extends React.Component {
           (gameSelected != null ?
             [<TabWindow key='tabwindow1'/>,
             <GameFeed sendMessage={Socket.sendMessage} feed={feed} 
-              userSelected={true} selectUserName={Socket.selectUserName} 
               username={username} editUserActive={editUserActive}
               setEditUserActive={setEditUserActive} editUserName={Socket.editUserName}
               rollDice={Socket.rollDice} userID={userID} key='gamefeed1'/>] :
