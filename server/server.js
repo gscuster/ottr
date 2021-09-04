@@ -140,11 +140,12 @@ io.on('connection', socket => {
       gameCollection = await Database.getCollection(client, gameName);
 
       // Get the data for this game
-      const gameData = await gameCollection.findOne({'_id': 'game_data'})
+      const gameData = (await gameCollection.findOne({'_id': 'game_data'})) ?? 
+        {gm: null};
 
       // Check if the game has a GM. If not, make the user that selected the game GM
-      if (gameData != null && gameData.gm == null) {
-        gameData.gm = [socket.auth.userID];
+      if (gameData.gm == null) {
+        gameData.gm = [socket.userID];
         console.log(gameData.gm);
         Database.updateArray(gameCollection, 'game_data', 'gm', gameData.gm)
       }
