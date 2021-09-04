@@ -83,7 +83,7 @@ export default class App extends React.Component {
             <LoadingPage connectionStatus={connectionStatus} 
               selectUserName={Socket.selectUserName}/> :
           (gameState.gameActive != null ?
-            [<TabWindow key='tabwindow1' gameData={gameState.gameData} 
+            [<TabWindow key='tabwindow1' gameData={gameState.gameData ?? {}} 
               rollDice={Socket.rollDice}/>,
             <GameFeed sendMessage={Socket.sendMessage} feed={feed} 
               username={username} editUserActive={editUserActive}
