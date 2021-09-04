@@ -138,7 +138,16 @@ io.on('connection', socket => {
     // Get the collection for this game
     try {
       gameCollection = await Database.getCollection(client, gameName);
+
+      // Get the data for this game
       const gameData = await gameCollection.findOne({'_id': 'game_data'})
+
+      // Check if the game has a GM. If not, make the user that selected the game GM
+      if (gameData != null && gameData.gm == null) {
+        gameData.gm = [socket.auth.userID];
+        console.log(gameData.gm);
+        Database.updateArray(gameCollection, 'game_data', 'gm', gameData.gm)
+      }
       if (!gameState.gameList.includes(gameName)) {
         console.log('Adding game to list');
         const newGameState = {
@@ -163,8 +172,9 @@ io.on('connection', socket => {
         console.log('Sending state update with active game');
       }
     }
-    catch {
+    catch (error) {
       socket.emit('gameState', gameState);
+      console.log(error);
       console.log('Something went wrong, just sending current state back');
     }
     
