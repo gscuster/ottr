@@ -12,7 +12,7 @@ export default class App extends React.Component {
     this.state = {
       editUserActive: false,
       feed: [],
-      gameState: {currentGame: null, gameList: []},
+      gameState: {currentGame: null, gameList: [], gameData: null},
       waitingOnResponse: false,
       userID: null,
       username: null,
@@ -64,7 +64,6 @@ export default class App extends React.Component {
 
   setGameState(gameState) {
     console.log('Setting game state')
-    console.log(gameState);
     this.setState({gameState, waitingOnResponse: false});
   }
 
@@ -84,7 +83,8 @@ export default class App extends React.Component {
             <LoadingPage connectionStatus={connectionStatus} 
               selectUserName={Socket.selectUserName}/> :
           (gameState.gameActive != null ?
-            [<TabWindow key='tabwindow1'/>,
+            [<TabWindow key='tabwindow1' gameData={gameState.gameData} 
+              rollDice={Socket.rollDice}/>,
             <GameFeed sendMessage={Socket.sendMessage} feed={feed} 
               username={username} editUserActive={editUserActive}
               setEditUserActive={setEditUserActive} editUserName={Socket.editUserName}

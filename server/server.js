@@ -11,7 +11,7 @@ const io = new Server(server);
 const port = 4000;
 
 let sessionData = [];
-let gameState = {gameActive: null, gameList: []};
+let gameState = {gameActive: null, gameList: [], gameData: null};
 
 // Get the collection from the database
 const client = Database.connect();
@@ -138,9 +138,14 @@ io.on('connection', socket => {
     // Get the collection for this game
     try {
       gameCollection = await Database.getCollection(client, gameName);
+      const gameData = await gameCollection.findOne({'_id': 'game_data'})
       if (!gameState.gameList.includes(gameName)) {
         console.log('Adding game to list');
-        const newGameState = {gameActive: gameName, gameList: [...gameState.gameList, gameName]}
+        const newGameState = {
+          gameActive: gameName, 
+          gameList: [...gameState.gameList, gameName],
+          gameData: gameData
+        }
         setGameState(newGameState);
         // Add the new game to the list of games
         Database.updateArray(collection, 'game_data', 'game_list', gameName);
@@ -148,7 +153,11 @@ io.on('connection', socket => {
         console.log('Sending state update with active game');
       }
       else {
-        const newGameState = {gameActive: gameName, gameList: [...gameState.gameList]}
+        const newGameState = {
+          gameActive: gameName, 
+          gameList: [...gameState.gameList],
+          gameData: gameData
+        }
         setGameState(newGameState);
         socket.emit('gameState', newGameState);
         console.log('Sending state update with active game');

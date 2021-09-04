@@ -1,0 +1,24 @@
+.character {
+  margin: 1em;
+}
+table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  margin: 1em;
+  padding: 0.3em;
+}
+table tr {
+  border: 1px solid black;
+  padding: 0.3em;
+}
+table td {
+  border: 1px solid black;
+  padding: 0.3em;
+}
+table th {
+  border: 1px solid black;
+  padding: 0.3em;
+}
+dl dt {
+  font-weight: bold;
+}
