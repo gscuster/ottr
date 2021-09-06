@@ -13,6 +13,7 @@ export default class App extends React.Component {
       editUserActive: false,
       feed: [],
       gameState: {gameActive: null, gameList: [], gameData: null, activeUsers: []},
+      gm: false,
       waitingOnResponse: false,
       userID: null,
       username: null,
@@ -59,13 +60,23 @@ export default class App extends React.Component {
   }
 
   setConnectionStatus(connectionStatus) {
+    console.log(connectionStatus);
     this.setState({connectionStatus});
   }
 
   setGameState(gameState) {
-    console.log('Setting game state')
-    console.log(gameState.gameData);
     this.setState({gameState, waitingOnResponse: false});
+    if (gameState.gameActive != null) {
+      const connectionStatus = 'connected';
+      this.setState({connectionStatus});
+    }
+    console.log(gameState);
+    console.log(this.state.userID);
+    if (gameState.gameData != null && 
+      gameState.gameData.gm.includes(this.state.userID)) {
+      const gm = true;
+      this.setState({gm});
+    }
   }
 
   setEditUserActive(editUserActive) {
@@ -75,18 +86,19 @@ export default class App extends React.Component {
 
   render () {
     const { feed, connectionStatus, username, editUserActive, userID, 
-      gameState, waitingOnResponse} = this.state;
+      gameState, waitingOnResponse, gm} = this.state;
     const { setEditUserActive } = this;
+    console.log(`We are the gm: ${gm}`);
     return (
       <div className="App">
         {
           connectionStatus !== 'connected' ?
             <LoadingPage connectionStatus={connectionStatus} 
               selectUserName={Socket.selectUserName}/> :
-          (gameState.gameActive != null ?
+            (gameState.gameActive != null ?
             [<TabWindow key='tabwindow1' gameData={gameState.gameData ?? {}} 
               rollDice={Socket.rollDice} gameName={gameState.gameActive}
-              users={gameState.activeUsers}/>,
+              users={gameState.activeUsers} gm={gm}/>,
             <GameFeed sendMessage={Socket.sendMessage} feed={feed} 
               username={username} editUserActive={editUserActive}
               setEditUserActive={setEditUserActive} editUserName={Socket.editUserName}

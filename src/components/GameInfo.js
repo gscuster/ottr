@@ -1,10 +1,11 @@
+import './GameInfo.css';
 
 export const GameInfo = ({gameName='', gameData={}, users=[]}) => {
   console.log(users);
   return (
-    <div>
-      <p>Game: <b>{gameName}</b></p>
-      <p>GM:
+    <div className='game-info'>
+      <p>Game:&nbsp;<b>{gameName}</b></p>
+      <p>GM:&nbsp;
         {users.filter( (user) => 
           (gameData.gm != null && gameData.gm.includes(user.userID)))
           .map( (user, i) => (
