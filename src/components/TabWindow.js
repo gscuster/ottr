@@ -1,16 +1,17 @@
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { CharacterSheet } from './CharacterSheet.js';
+import { GameInfo } from './GameInfo.js';
 import './TabWindow.css';
 
-export const TabWindow =  ({gameData: {characters=[] }, rollDice }) => (
+export const TabWindow =  ({gameName, gameData, rollDice, users }) => (
   <Tabs className='tabs'>
     <TabList>
       <Tab>Map</Tab>
       <Tab>Characters</Tab>
-      {characters.map( (character, i) => (
+      {gameData.characters != null && gameData.characters.map( (character, i) => (
         <Tab key={i}>{character.name}</Tab>
       ))}
-      <Tab>Settings</Tab>
+      <Tab>Game Info</Tab>
     </TabList>
 
     <TabPanel>
@@ -21,14 +22,14 @@ export const TabWindow =  ({gameData: {characters=[] }, rollDice }) => (
       <h2>Unimplemented</h2>
     </TabPanel>
 
-    {characters.map( (character, i) => (
+    {gameData.characters != null && gameData.characters.map( (character, i) => (
       <TabPanel key={i}>
         <CharacterSheet character={character} rollDice={rollDice}/>
       </TabPanel>
       ))}
 
     <TabPanel>
-      <h2>No settings yet</h2>
+      <GameInfo gameName={gameName} gameData={gameData} users={users}/>
     </TabPanel>
   </Tabs>
 );

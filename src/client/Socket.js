@@ -20,6 +20,7 @@ export const setup = () => {
     {Socket.emit('connectedAs', username, socket.userID, true)});
   socket.on('feed', (feed) => {Socket.emit('feed', feed)});
   socket.on('gameState', (gameState) => {Socket.emit('gameState', gameState)});
+  socket.on('activeUsers', (activeUsers) => {Socket.emit('activeUsers', activeUsers)});
 
   // Get stored session ID
   const sessionID = localStorage.getItem("sessionID");

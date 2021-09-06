@@ -11,7 +11,7 @@ const io = new Server(server);
 const port = 4000;
 
 let sessionData = [];
-let gameState = {gameActive: null, gameList: [], gameData: null};
+let gameState = {gameActive: null, gameList: [], gameData: null, activeUsers: []};
 
 // Get the collection from the database
 const client = Database.connect();
@@ -87,6 +87,13 @@ io.on('connection', socket => {
       message: `User ${socket.username} has disconnected.`
     }
     io.emit('message', systemMsg);
+    // Update active users
+    const newGameState = {
+      ...gameState,
+      activeUsers: gameState.activeUsers.filter( (user) => (user.userID != socket.userID))
+    }
+    setGameState(newGameState);
+    io.emit('gameState', gameState);
   });
 
   // Pass incoming messages off
@@ -108,9 +115,11 @@ io.on('connection', socket => {
       catch {
         gameList = [];
       }
-      const newGameState = {gameActive: null, gameList: gameList};
+      const newGameState = {
+        ...gameState,
+        gameList: gameList};
       setGameState(newGameState);
-      socket.emit('gameState', newGameState);
+      socket.emit('gameState', gameState);
     }
   });
 
@@ -138,10 +147,21 @@ io.on('connection', socket => {
     // Get the collection for this game
     try {
       gameCollection = await Database.getCollection(client, gameName);
-      const gameData = await gameCollection.findOne({'_id': 'game_data'})
+
+      // Get the data for this game
+      const gameData = (await gameCollection.findOne({'_id': 'game_data'})) ?? 
+        {gm: null};
+
+      // Check if the game has a GM. If not, make the user that selected the game GM
+      if (gameData.gm == null || gameData.gm.length === 0) {
+        gameData.gm = [socket.userID];
+        console.log(gameData.gm);
+        Database.updateArray(gameCollection, 'game_data', 'gm', socket.userID)
+      }
       if (!gameState.gameList.includes(gameName)) {
         console.log('Adding game to list');
         const newGameState = {
+          ...gameState,
           gameActive: gameName, 
           gameList: [...gameState.gameList, gameName],
           gameData: gameData
@@ -149,22 +169,23 @@ io.on('connection', socket => {
         setGameState(newGameState);
         // Add the new game to the list of games
         Database.updateArray(collection, 'game_data', 'game_list', gameName);
-        socket.emit('gameState', newGameState);
+        socket.emit('gameState', gameState);
         console.log('Sending state update with active game');
       }
       else {
         const newGameState = {
+          ...gameState,
           gameActive: gameName, 
-          gameList: [...gameState.gameList],
           gameData: gameData
         }
         setGameState(newGameState);
-        socket.emit('gameState', newGameState);
+        socket.emit('gameState', gameState);
         console.log('Sending state update with active game');
       }
     }
-    catch {
+    catch (error) {
       socket.emit('gameState', gameState);
+      console.log(error);
       console.log('Something went wrong, just sending current state back');
     }
     
@@ -217,6 +238,15 @@ io.on('connection', socket => {
     message: `User ${socket.username} has connected.`
   }
   io.emit('message', systemMsg);
+  // Update active users if necessary
+  if (!gameState.activeUsers.some((user) => user.userID == socket.userID)) {
+    const newGameState = {
+      ...gameState,
+      activeUsers: [...gameState.activeUsers, {userID: socket.userID, username: socket.username}]
+    }
+    setGameState(newGameState);
+  }
+  io.emit('gameState', gameState);
 });
 
 io.listen(port, {
