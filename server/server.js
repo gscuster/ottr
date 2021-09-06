@@ -15,8 +15,9 @@ let gameState = {gameActive: null, gameList: [], gameData: null, activeUsers: []
 
 // Get the collection from the database
 const client = Database.connect();
-const collection = Database.getCollection(client, 'default');
-let gameCollection = null;
+const ottrDb = Database.getDatabase(client, 'ottr');
+const ottrDefault = Database.getCollection(client, 'ottr', 'default');
+let gameDb = null;
 
 const setGameState = (newGameState) => {
   gameState = newGameState;
@@ -29,7 +30,7 @@ const setGameState = (newGameState) => {
 io.use(async (socket, next) => {
   // Get the session data from the database, if it exists
   try {
-    sessionData = (await (await collection).findOne({'_id': 'sessionData'})).sessionData ?? [];
+    sessionData = (await (await ottrDefault).findOne({'_id': 'sessionData'})).sessionData ?? [];
   }
   catch {
     sessionData = [];
@@ -64,7 +65,7 @@ io.use(async (socket, next) => {
   };
   sessionData.push(sessionInfo);
   // Update the session data in the database
-  Database.updateArray(collection, 'sessionData', 'sessionData', sessionInfo);
+  Database.updateArray(ottrDb, 'default', 'sessionData', 'sessionData', sessionInfo);
   next();
 });
 
@@ -95,9 +96,6 @@ io.on('connection', socket => {
     setGameState(newGameState);
     io.emit('gameState', gameState);
   });
-
-  // Pass incoming messages off
-  socket.on('message', (msg, data=null) => Message.onMessage(msg, data, io, socket, collection));
   
   // Get the game state on request
   socket.on('getGameState', async () => {
@@ -105,12 +103,21 @@ io.on('connection', socket => {
       // We're in a game, send it back
       socket.emit('gameState', gameState);
       console.log('We are in a game. Sending the state');
+      // Send the feed as well
+      let feed;
+      try {
+        feed = (await (await gameDb).collection('feed').find().toArray()) ?? [];
+      }
+      catch {
+        feed = [];
+      }
+      socket.emit('feed', feed);
     }
     else {
       // We're not in a game, get a list of available games to send back
       let gameList;
       try {
-        gameList = (await (await collection).findOne({'_id': 'game_data'})).game_list ?? [];
+        gameList = (await (await ottrDefault).findOne({'_id': 'game_data'})).game_list ?? [];
       }
       catch {
         gameList = [];
@@ -127,7 +134,8 @@ io.on('connection', socket => {
   socket.on('getFeed', async () => {
     let feed;
     try {
-      feed = (await (await collection).findOne({'_id': 'game_data'})).main_feed ?? [];
+      feed = (await (await ottrDb).collection('feed').find().toArray()) ?? [];
+      console.log(feed);
     }
     catch {
       feed = [];
@@ -146,29 +154,48 @@ io.on('connection', socket => {
     
     // Get the collection for this game
     try {
-      gameCollection = await Database.getCollection(client, gameName);
+      gameDb = await Database.getDatabase(client, gameName);
 
       // Get the data for this game
-      const gameData = (await gameCollection.findOne({'_id': 'game_data'})) ?? 
+      const gameData = (await gameDb.collection('game_data').findOne({'_id': 'game_data'})) ?? 
         {gm: null};
 
       // Check if the game has a GM. If not, make the user that selected the game GM
       if (gameData.gm == null || gameData.gm.length === 0) {
         gameData.gm = [socket.userID];
         console.log(gameData.gm);
-        Database.updateArray(gameCollection, 'game_data', 'gm', socket.userID)
+        Database.updateArray(gameDb, 'game_data', 'game_data', 'gm', socket.userID)
       }
+
+      // Remove any existing message listeners
+      socket.removeAllListeners('message');
+      // Set up the feed for the game
+      socket.on('message', (msg, data=null) => Message.onMessage(msg, data, io, socket, gameDb));
+      // Get the feed and send it
+      let feed;
+      try {
+        feed = (await (await gameDb).collection('feed').find().toArray()) ?? [];
+      }
+      catch {
+        feed = [];
+      }
+      socket.emit('feed', feed);
+
+      // Get characters
+      const characters = await getCharacters(gameDb);
+
+      // If the game is new, added it to the list of games
       if (!gameState.gameList.includes(gameName)) {
         console.log('Adding game to list');
         const newGameState = {
           ...gameState,
           gameActive: gameName, 
           gameList: [...gameState.gameList, gameName],
-          gameData: gameData
+          gameData: {...gameData, characters: characters}
         }
         setGameState(newGameState);
         // Add the new game to the list of games
-        Database.updateArray(collection, 'game_data', 'game_list', gameName);
+        Database.updateArray(ottrDb, 'default', 'game_data', 'game_list', gameName);
         socket.emit('gameState', gameState);
         console.log('Sending state update with active game');
       }
@@ -176,7 +203,7 @@ io.on('connection', socket => {
         const newGameState = {
           ...gameState,
           gameActive: gameName, 
-          gameData: gameData
+          gameData: {...gameData, characters: characters}
         }
         setGameState(newGameState);
         socket.emit('gameState', gameState);
@@ -214,7 +241,7 @@ io.on('connection', socket => {
         }
       };
       try {
-        (await collection).updateOne(filter, updateDoc);
+        (await ottrDefault).updateOne(filter, updateDoc);
       }
       catch {
         // Do nothing
@@ -254,4 +281,14 @@ io.listen(port, {
     origin: '*'
   }
 });
+
+const getCharacters = async (db) => {
+  let characters;
+  try {
+    characters = (await (await db).collection('characters').find().toArray()) ?? [];
+  }
+  catch {
+    characters = [];
+  }
+}
 

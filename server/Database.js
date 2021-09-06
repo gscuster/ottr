@@ -25,10 +25,20 @@ export const connect = async () => {
   }
 }
 
-export const getCollection = async (client, collectionName) => {
+export const getCollection = async (client, dbName, collectionName) => {
   try {
-    const collection = await (await client).db('ottr').collection(collectionName);
+    const collection = await (await client).db(dbName).collection(collectionName);
     return collection;
+  }
+  catch {
+    return null;
+  }
+}
+
+export const getDatabase = async (client, dbName) => {
+  try {
+    const db = await (await client).db(dbName);
+    return db;
   }
   catch {
     return null;
@@ -43,7 +53,7 @@ export const getCollection = async (client, collectionName) => {
  * @param {String} key 
  * @param {*} value 
  */
-export const updateArray = async (collection, id, key, value) => {
+export const updateArray = async (db, collection, id, key, value) => {
   const filter = { _id: id };
   const options = { upsert: true };
   const updateDoc = {
@@ -52,7 +62,7 @@ export const updateArray = async (collection, id, key, value) => {
     }
   };
   try {
-    (await collection).updateOne(filter, updateDoc, options);
+    (await db).collection(collection).updateOne(filter, updateDoc, options);
   }
   catch (error) {
     // Do nothing

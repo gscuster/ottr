@@ -8,7 +8,7 @@ import { DiceRoll } from 'rpg-dice-roller';
  * @param {Socket} socket 
  * @param {Collection} collection 
  */
-export const onMessage = async (msg, data, io, socket, collection) => {
+export const onMessage = async (msg, data, io, socket, db) => {
   console.log('Received: ' + msg);
 
   // Create basic output object
@@ -25,24 +25,19 @@ export const onMessage = async (msg, data, io, socket, collection) => {
   const command = msgCommand(msgSplit, data)
 
   // Create the output
-  const output = {...message, ...command};
+  const output = {
+    ...message, 
+    ...command,
+    timestamp: Date.now()
+  };
+  console.log(output);
 
-  const filter = { 
-    _id: 'game_data'
-  };
-  const updateDoc = {
-    $push: {
-      'main_feed': output
-    }
-  };
-  const options = { upsert: true };
   try {
-    (await collection).updateOne(filter, updateDoc, options);
+    (await db).collection('feed').insertOne(output);
   }
-  catch {
-    // Do nothing
+  catch (error) {
+    console.log(error);
   }
-  
 
   io.emit('message', output);
 }
