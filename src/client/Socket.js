@@ -88,9 +88,6 @@ function onSession(sessionID, userID, username) {
 
   // Get current game state
   socket.emit('getGameState');
-  
-  // Get feed messages
-  socket.emit('getFeed');
 }
 
 /**
