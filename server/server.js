@@ -91,7 +91,7 @@ io.on('connection', socket => {
     // Update active users
     const newGameState = {
       ...gameState,
-      activeUsers: gameState.activeUsers.filter( (user) => (user.userID != socket.userID))
+      activeUsers: gameState.activeUsers.filter( (user) => (user.userID !== socket.userID))
     }
     setGameState(newGameState);
     io.emit('gameState', gameState);
@@ -266,7 +266,7 @@ io.on('connection', socket => {
   }
   io.emit('message', systemMsg);
   // Update active users if necessary
-  if (!gameState.activeUsers.some((user) => user.userID == socket.userID)) {
+  if (!gameState.activeUsers.some((user) => user.userID === socket.userID)) {
     const newGameState = {
       ...gameState,
       activeUsers: [...gameState.activeUsers, {userID: socket.userID, username: socket.username}]
@@ -290,5 +290,6 @@ const getCharacters = async (db) => {
   catch {
     characters = [];
   }
+  return characters;
 }
 
