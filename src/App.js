@@ -88,7 +88,6 @@ export default class App extends React.Component {
     const { feed, connectionStatus, username, editUserActive, userID, 
       gameState, waitingOnResponse, gm} = this.state;
     const { setEditUserActive } = this;
-    console.log(`We are the gm: ${gm}`);
     return (
       <div className="App">
         {

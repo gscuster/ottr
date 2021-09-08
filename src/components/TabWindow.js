@@ -7,22 +7,12 @@ import './TabWindow.css';
 
 export const TabWindow =  ({gameName, gameData, rollDice, users, gm }) => {
   const [openCharacters, setOpenCharacters] = useState([]);
-  const characterTabs = openCharacters.map((name) => {
-    let character;
-    if (gameData.characters != null) {
-      character = gameData.characters.find((character) => name === character.name);
-    }
-    if (character == null) {
-      character = {};
-    }
-    return character;
-  });
   return (
     <Tabs className='tabs'>
       <TabList>
         <Tab>Map</Tab>
         <Tab>Characters</Tab>
-        {characterTabs.map( (character, i) => (
+        {openCharacters.map( (character, i) => (
           <Tab key={i}>{character.name}</Tab>
         ))}
         <Tab>Game Info</Tab>
@@ -33,10 +23,11 @@ export const TabWindow =  ({gameName, gameData, rollDice, users, gm }) => {
       </TabPanel>
   
       <TabPanel>
-        <CharacterManager gameData={gameData} gm={gm}/>
+        <CharacterManager gameData={gameData} gm={gm}
+          openCharacters={openCharacters} setOpenCharacters={setOpenCharacters}/>
       </TabPanel>
   
-      {characterTabs.map( (character, i) => (
+      {openCharacters.map( (character, i) => (
         <TabPanel key={i}>
           <CharacterSheet character={character} rollDice={rollDice}/>
         </TabPanel>
