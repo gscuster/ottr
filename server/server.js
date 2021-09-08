@@ -72,7 +72,7 @@ io.use(async (socket, next) => {
 /**
  * Set things up once we have a connection
  */
-io.on('connection', socket => {
+io.on('connection', async (socket) => {
   console.log(`connect: ${socket.id} for user: ${socket.username}`);
 
   /**
@@ -274,6 +274,10 @@ io.on('connection', socket => {
     setGameState(newGameState);
   }
   io.emit('gameState', gameState);
+  // If we are in a game, set up messages
+  if (gameState.gameActive !== null) {
+    socket.on('message', (msg, data=null) => Message.onMessage(msg, data, io, socket, gameDb));
+  }
 });
 
 io.listen(port, {
