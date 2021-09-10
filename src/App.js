@@ -71,7 +71,7 @@ export default class App extends React.Component {
       this.setState({connectionStatus});
     }
     console.log(gameState);
-    console.log(this.state.userID);
+    console.log(`UserID is: ${this.state.userID}`);
     if (gameState.gameData != null && 
       gameState.gameData.gm.includes(this.state.userID)) {
       const gm = true;

@@ -252,7 +252,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('updateCharacter', async (character) => {
-    const oldCharacter = await getCharacter(character._id);
+    const oldCharacter = await getCharacter(gameDb, character._id);
     if (oldCharacter != null) {
       // Check if the updater has permission to update
       if (oldCharacter.owners.includes(socket.userID) || 
@@ -269,7 +269,14 @@ io.on('connection', async (socket) => {
         (await (await gameDb).collection('characters').insertOne(newCharacter));
       }
     }
-    // Still need to tell people we did something. And handle errors
+    // Get the updated character list and send it out
+    const characters = await getCharacters(gameDb);
+    const newGameState = {
+      ...gameState,
+      gameData: {...gameState.gameData, characters: characters}
+    }
+    setGameState(newGameState);
+    io.emit('gameState', gameState);
   });
 
   socket.emit("session", {

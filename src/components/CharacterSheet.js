@@ -15,6 +15,7 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter}) => {
       sheet = <FateCoreSheet rollDice={rollDice} character={character}/>
       break;
     default:
+      console.log(character);
       sheet = <p>Error: No sheet component available for this character format</p>
   }
   return (
