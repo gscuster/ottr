@@ -141,3 +141,11 @@ export const selectUserName = (username) => {
     Socket.emit('setConnectionStatus', 'pending');
   }
 }
+
+/**
+ * Sends an updated character to the server
+ * @param {Object} character 
+ */
+export const updateCharacter = (character) => {
+  socket.emit('updateCharacter', character);
+}

@@ -97,7 +97,7 @@ export default class App extends React.Component {
             (gameState.gameActive != null ?
             [<TabWindow key='tabwindow1' gameData={gameState.gameData ?? {}} 
               rollDice={Socket.rollDice} gameName={gameState.gameActive}
-              users={gameState.activeUsers} gm={gm}/>,
+              users={gameState.activeUsers} gm={gm} updateCharacter={Socket.updateCharacter}/>,
             <GameFeed sendMessage={Socket.sendMessage} feed={feed} 
               username={username} editUserActive={editUserActive}
               setEditUserActive={setEditUserActive} editUserName={Socket.editUserName}

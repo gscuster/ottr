@@ -5,8 +5,20 @@ import { GameInfo } from './GameInfo.js';
 import React, { useState } from 'react';
 import './TabWindow.css';
 
-export const TabWindow =  ({gameName, gameData, rollDice, users, gm }) => {
+export const TabWindow =  ({gameName, gameData, rollDice, users, gm, 
+  updateCharacter}) => {
   const [openCharacters, setOpenCharacters] = useState([]);
+
+  const setCharacter = (characters, setCharacters, index) => {
+    return (newCharacter) => {
+      const newCharacters = characters.map( (oldCharacter, i) => (
+        (i === index) ? newCharacter : oldCharacter 
+      ));
+      setCharacters(newCharacters);
+      updateCharacter(newCharacter)
+    }
+  }
+
   return (
     <Tabs className='tabs'>
       <TabList>
@@ -29,7 +41,8 @@ export const TabWindow =  ({gameName, gameData, rollDice, users, gm }) => {
   
       {openCharacters.map( (character, i) => (
         <TabPanel key={i}>
-          <CharacterSheet character={character} rollDice={rollDice}/>
+          <CharacterSheet character={character} rollDice={rollDice}
+            updateCharacter={setCharacter(openCharacters, setOpenCharacters, i)}/>
         </TabPanel>
       ))}
   

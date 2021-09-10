@@ -249,7 +249,28 @@ io.on('connection', async (socket) => {
 
       socket.emit('username_edited', username);
     }
-  })
+  });
+
+  socket.on('updateCharacter', async (character) => {
+    const oldCharacter = await getCharacter(character._id);
+    if (oldCharacter != null) {
+      // Check if the updater has permission to update
+      if (oldCharacter.owners.includes(socket.userID) || 
+        gameState.gameData.gm.includes(socket.userID)) {
+        // Update character
+        const newCharacter = {...oldCharacter, ...character};
+        const filter = {_id: character._id};
+        const options = { upsert: true };
+        (await (await gameDb).collection('characters').replaceOne(filter, newCharacter, options));
+      }
+    } else {
+      if (gameState.gameData.gm.includes(socket.userID)) {
+        const newCharacter = {...character, owners: []};
+        (await (await gameDb).collection('characters').insertOne(newCharacter));
+      }
+    }
+    // Still need to tell people we did something. And handle errors
+  });
 
   socket.emit("session", {
     sessionID: socket.sessionID,
@@ -285,6 +306,17 @@ io.listen(port, {
     origin: '*'
   }
 });
+
+const getCharacter = async (db, id) => {
+  let character;
+  try {
+    character = (await (await db).collection('characters').findOne({_id: id}));
+  }
+  catch {
+    character = null;
+  }
+  return character;
+}
 
 const getCharacters = async (db) => {
   let characters;
