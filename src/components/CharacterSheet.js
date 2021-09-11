@@ -15,6 +15,12 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
     }
     
   }
+  const addOwner = (e) => {
+    e.preventDefault();
+    console.log(e);
+    //const updatedCharacter = {...characterData,
+    //  owners: [...characterData.owners, e.target.value]}
+  }
   
   let sheet;
   switch (character.format) {
@@ -31,6 +37,29 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
       {characterData._id == null && <button onClick={saveCharacter}>Save Character</button>}
       {(characterData._id != null) && (gm || (characterData.owners != null && characterData.owners.includes(userID))) && 
         <button onClick={saveCharacter}>Update Character</button>}
+      {(character._id != null && gm) &&
+        <div>
+          <br/>
+        <b >Owners:</b>
+        <div >
+          {characterData.owners.map( (user, i) => (
+              <span key={i}>{user.username}</span>
+            ))
+          }
+        </div>
+        <br />
+        <form onSubmit={addOwner}>
+          <button>Add owner</button>
+          <select >
+            {users.filter( (user) => !gm)
+              .map( (user, i) => (
+                <option key={i} value={user}>{user.username}</option>
+              ))
+            }
+          </select>
+        </form>
+        </div>
+      }
       {sheet}
     </div>
   );
