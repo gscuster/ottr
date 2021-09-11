@@ -100,7 +100,13 @@ io.on('connection', async (socket) => {
   // Get the game state on request
   socket.on('getGameState', async () => {
     if (gameState.gameActive != null) {
-      // We're in a game, send it back
+      // We're in a game, update state and send it back
+      const characters = await getCharacters(gameDb);
+      const newGameState = {
+        ...gameState,
+        gameData: {...gameState.gameData, characters: characters}
+      }
+      setGameState(newGameState);
       socket.emit('gameState', gameState);
       console.log('We are in a game. Sending the state');
       // Send the feed as well

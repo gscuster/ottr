@@ -15,12 +15,14 @@ export const GameInfo = ({gameName='', gameData={}, users=[]}) => {
       </p>
       
       <p>Players:</p>
-      {users.filter( (user) => 
-        (!(gameData.gm != null && gameData.gm.includes(user.userID))))
-        .map( (user, i) => (
-          <b key={i}>{user.username}</b>
-        ))
-      }
+      <ul>
+        {users.filter( (user) => 
+          (!(gameData.gm != null && gameData.gm.includes(user.userID))))
+          .map( (user, i) => (
+            <li key={i}>{user.username}</li>
+          ))
+        }
+      </ul>
     </div>
   )
 }

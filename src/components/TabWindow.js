@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import './TabWindow.css';
 
 export const TabWindow =  ({gameName, gameData, rollDice, users, gm, 
-  updateCharacter}) => {
+  updateCharacter, userID}) => {
   const [openCharacters, setOpenCharacters] = useState([]);
 
   const setCharacter = (characters, setCharacters, index) => {
@@ -42,7 +42,7 @@ export const TabWindow =  ({gameName, gameData, rollDice, users, gm,
       {openCharacters.map( (character, i) => (
         <TabPanel key={i}>
           <CharacterSheet character={character} rollDice={rollDice}
-            updateCharacter={setCharacter(openCharacters, setOpenCharacters, i)}/>
+            updateCharacter={setCharacter(openCharacters, setOpenCharacters, i)} gm={gm} userID={userID} users={users}/>
         </TabPanel>
       ))}
   
