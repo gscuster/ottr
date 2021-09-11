@@ -15,13 +15,24 @@ const skillLadder = {
   '12': 'Absurdly High'
 }
 
-export const FateCoreSheet = ({ rollDice, character: {name, description, aspects, skills, stunts}}) => {
+export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit}) => {
+  const {name, description, aspects, skills, stunts} = character;
   const sortedSkills = Object.keys(skillLadder).reverse().map( (key) => {
     return skills.filter(skill => skill.rating === key)
   })
+  
+  const updateTextField = (e) => {
+    const field = e.target.getAttribute('field');
+    const updatedCharacter = {...character, [field]: e.target.value }
+    setCharacterData(updatedCharacter);
+  }
+
   return (
     <div className='character'>
-      <p>{description}</p>
+      {canEdit ?
+        <textarea onChange={updateTextField} className="character-description" 
+          rows="4" field="description" value={description}></textarea> : 
+        <p>{description}</p>}
       <table>
         <thead>
           <tr>

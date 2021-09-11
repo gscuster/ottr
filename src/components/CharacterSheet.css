@@ -1,6 +1,11 @@
 .character {
   margin: 1em;
 }
+.character-description {
+  width: 100%;
+  background: transparent;
+  resize: none;
+}
 table {
   border: 1px solid black;
   border-collapse: collapse;
