@@ -5,7 +5,11 @@ import React, { useState } from 'react';
 
 export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false, userID=0, users=[]}) => {
   const [characterData, setCharacterData] = useState({...character});
+  const [editActive, setEditActive] = useState(false);
+
+  // calls updateCharacter with currrent character info
   const saveCharacter = () => {
+    // If the character doesn't have an ID, add it
     if (characterData._id == null ){
       const id =  uuidv4();
       updateCharacter({...characterData, _id: id});
@@ -15,11 +19,26 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
     }
     
   }
+
+  // Adds an owner to the character
   const addOwner = (e) => {
     e.preventDefault();
     console.log(e);
-    //const updatedCharacter = {...characterData,
-    //  owners: [...characterData.owners, e.target.value]}
+    const selectElement = e.target[1];
+    if (selectElement == null) {
+      return;
+    }
+    const addedUser = users.find( (user) => user.userID === selectElement.value);
+    if (addedUser == null) {
+      return;
+    }
+    console.log(addedUser)
+    const updatedUsers = characterData.owners != null ?
+      [...characterData.owners, addedUser] : [addedUser]
+    const updatedCharacter = {...characterData,
+      owners: updatedUsers}
+    setCharacterData(updatedCharacter);
+    saveCharacter();
   }
   
   let sheet;
@@ -50,10 +69,9 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
         <br />
         <form onSubmit={addOwner}>
           <button>Add owner</button>
-          <select >
-            {users.filter( (user) => !gm)
-              .map( (user, i) => (
-                <option key={i} value={user}>{user.username}</option>
+          <select id="ownerSelect">
+            {users.map( (user, i) => (
+                <option key={i} value={user.userID}>{user.username}</option>
               ))
             }
           </select>
