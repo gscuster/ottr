@@ -1,6 +1,11 @@
 .character {
   margin: 1em;
 }
+.character-description {
+  width: 100%;
+  background: transparent;
+  resize: none;
+}
 table {
   border: 1px solid black;
   border-collapse: collapse;
@@ -21,4 +26,18 @@ table th {
 }
 dl dt {
   font-weight: bold;
+}
+table img {
+  vertical-align: middle;
+}
+.skill-number {
+  width: 1em;
+  background: transparent;
+  border: none;
+}
+
+.character-text-input {
+  background: transparent;
+  border: none;
+  margin-bottom: 0.5em;
 }

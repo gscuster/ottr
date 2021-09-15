@@ -1,78 +1,109 @@
 import  "./CharacterSheet.css";
-import { DiceButton } from './DiceButton';
+import { FateCoreSheet } from './CharacterSheets/FateCoreSheet';
+import { v4 as uuidv4 } from 'uuid';
+import React, { useState } from 'react';
 
-const skillLadder = {
-  '-2': 'Terrible',
-  '-1': 'Poor',
-  '0': 'Mediocre',
-  '1': 'Average',
-  '2': 'Fair',
-  '3': 'Good',
-  '4': 'Great',
-  '5': 'Superb',
-  '6': 'Fantastic',
-  '7': 'Epic',
-  '8': 'Legendary',
-  '12': 'Absurdly High'
-}
+export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false, 
+  userID=0, users=[]}) => {
+  const [characterData, setCharacterData] = useState({...character});
+  const [editActive, setEditActive] = useState(character._id == null);
 
-export const CharacterSheet = ({ rollDice, character: {name, species, aspects, skills, stunts}}) => {
-  const sortedSkills = Object.keys(skillLadder).reverse().map( (key) => {
-    return skills.filter(skill => skill.rating === key)
-  })
+  // Adds an owner to the character
+  const addOwner = (e) => {
+    e.preventDefault();
+    console.log(e);
+    const selectElement = e.target[1];
+    if (selectElement == null) {
+      return;
+    }
+    const addedUser = users.find( (user) => user.userID === selectElement.value);
+    if (addedUser == null) {
+      return;
+    }
+    console.log(addedUser)
+    const updatedUsers = characterData.owners != null ?
+      [...characterData.owners, addedUser] : [addedUser]
+    const updatedCharacter = {...characterData,
+      owners: updatedUsers}
+    setCharacterData(updatedCharacter);
+    saveCharacter();
+  }
+
+  const cancelChanges = (e) => {
+    e.preventDefault();
+    setEditActive(false);
+    setCharacterData({...character});
+  }
+
+  // calls updateCharacter with currrent character info
+  const saveCharacter = (e) => {
+    // If the character doesn't have an ID, add it
+    if (characterData._id == null ){
+      const id =  uuidv4();
+      updateCharacter({...characterData, _id: id});
+    }
+    else {
+      updateCharacter({...characterData});
+    }
+    setEditActive(false);
+  }
+
+  
+
+  const handleEditActive = () => {
+    setEditActive(true);
+  }
+  
+  let sheet;
+  switch (character.format) {
+    case 'Fate Core':
+      sheet = <FateCoreSheet rollDice={rollDice} character={characterData} 
+        gm={gm} setCharacterData={setCharacterData} editActive={editActive}/>
+      break;
+    default:
+      console.log(character);
+      sheet = <p>Error: No sheet component available for this character format</p>
+  }
+
+  // Check whether user can edit sheet
+  const canEdit = users.includes(userID) || gm;
+
   return (
     <div className='character'>
-      <b>Species:</b> {species}
-      <table>
-        <thead>
-          <tr>
-            <th>Aspect</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {aspects.map( (aspect, index) => 
-            {return (
-            <tr key={index}>
-              <td>{aspect.name}</td>
-              <td>{aspect.description}</td>
-            </tr>
-            )}           
-          )}
-        </tbody>
-        
-        
-      </table>
+      {canEdit && characterData._id == null && <button onClick={saveCharacter}>Save Character</button>}
+      {canEdit && !editActive && characterData._id != null && 
+        <button onClick={handleEditActive}>Edit Character</button>}
+      
+      {editActive && characterData._id != null &&
+        <form>
+          <input type='button' onClick={saveCharacter} value='Update Character'/>
+          <input type='button' onClick={cancelChanges} value='Cancel Changes'/>
+        </form>
+      }
 
-      <table>
-        <thead>
-          <tr>
-            <th>Rating</th>
-            <th>Skill(s)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedSkills
-            .filter( level => level.length > 0 )
-            .map( (level, i) => (
-              <tr key={i}>
-                <td>{skillLadder[level[0].rating]}</td>
-                {level.map( (skill, j) => (
-                  <td key={j}><DiceButton character={name} name={skill.name} rating={skill.rating} rollDice={rollDice}/> {skill.name} </td>
-                ))}
-              </tr>
-            ))}
-        </tbody>
-        
-      </table>
-
-      <h3>Stunts</h3>
-      <dl>
-        {stunts.map( (stunt, index) => ([
-          <dt key={2*index}>{stunt.name}</dt>,
-          <dd key={2*index + 1}>{stunt.description}</dd>
-        ]))}
-      </dl>
+      {(character._id != null && gm) &&
+        <div>
+          <br/>
+        <b >Owners:</b>
+        <div >
+          {characterData.owners && characterData.owners.map( (user, i) => (
+              <span key={i}>{user.username}</span>
+            ))
+          }
+        </div>
+        <br />
+        <form onSubmit={addOwner}>
+          <button>Add owner</button>
+          <select id="ownerSelect">
+            {users.map( (user, i) => (
+                <option key={i} value={user.userID}>{user.username}</option>
+              ))
+            }
+          </select>
+        </form>
+        </div>
+      }
+      {sheet}
     </div>
   );
 }

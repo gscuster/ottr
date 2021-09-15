@@ -9,7 +9,7 @@ import './EditButton.css'
 export const EditButton = ({width, height, onClick, icon}) => 
 (
   <button className='edit-button' onClick={onClick} type='button' alt="Edit">
-    <img className='edit-button-icon' src={icon} width={width} height={height}
+    <img className='edit-button-icon user-input' src={icon} width={width} height={height}
       alt="Edit" onClick={onClick}/>
   </button>
 )
