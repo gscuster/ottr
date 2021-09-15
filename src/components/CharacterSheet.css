@@ -34,5 +34,10 @@ table img {
   width: 1em;
   background: transparent;
   border: none;
-  display: inline;
+}
+
+.character-text-input {
+  background: transparent;
+  border: none;
+  margin-bottom: 0.5em;
 }

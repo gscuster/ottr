@@ -32,6 +32,7 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
   const cancelChanges = (e) => {
     e.preventDefault();
     setEditActive(false);
+    setCharacterData({...character});
   }
 
   // calls updateCharacter with currrent character info
