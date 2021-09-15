@@ -6,3 +6,6 @@
   grid-template-columns: repeat(3, 1fr);
   height: 100vh;
 }
+p {
+  vertical-align: middle;
+}

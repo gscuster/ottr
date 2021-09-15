@@ -27,3 +27,12 @@ table th {
 dl dt {
   font-weight: bold;
 }
+table img {
+  vertical-align: middle;
+}
+.skill-number {
+  width: 1em;
+  background: transparent;
+  border: none;
+  display: inline;
+}

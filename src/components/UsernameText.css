@@ -1,7 +1,7 @@
 .user-form {
   display: inline-block;
 }
-input {
+.user-input {
   background-color: inherit;
   border: none;
   padding-left: 1em;
@@ -9,10 +9,10 @@ input {
   font-size: larger;
   vertical-align: middle;
 }
-img {
+.user-img {
   padding-left: 1em;
   vertical-align: middle;
 }
-p {
+.user-p {
   vertical-align: middle;
 }

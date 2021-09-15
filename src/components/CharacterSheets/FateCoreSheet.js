@@ -12,14 +12,33 @@ const skillLadder = {
   '6': 'Fantastic',
   '7': 'Epic',
   '8': 'Legendary',
-  '12': 'Absurdly High'
+  '12': 'Absurdly High',
+  '21': 'Accident',
+  '4-1': 'Stupid accident'
 }
 
-export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit}) => {
+export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
+  editActive, setEditActive}) => {
   const {name, description, aspects, skills, stunts} = character;
   const sortedSkills = Object.keys(skillLadder).reverse().map( (key) => {
     return skills.filter(skill => skill.rating === key)
   })
+
+  const skillInput = (e) => {
+    const change = e.target.value > 0 ? 1 : -1;
+    const skillName = e.target.getAttribute('skillname');
+    const skillRating = e.target.getAttribute('skillrating');
+    const updatedSkill = {
+      name: skillName, 
+      rating: String(parseInt(skillRating) + change)
+    };
+    console.log(updatedSkill);
+    const updatedSkills = character.skills.map( (oldSkill) => 
+      oldSkill.name === skillName ? updatedSkill : oldSkill);
+    const updatedCharacter = {...character, skills: updatedSkills};
+    console.log(updatedCharacter);
+    setCharacterData(updatedCharacter);
+  }
   
   const updateTextField = (e) => {
     const field = e.target.getAttribute('field');
@@ -29,7 +48,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit})
 
   return (
     <div className='character'>
-      {canEdit ?
+      {editActive ?
         <textarea onChange={updateTextField} className="character-description" 
           rows="4" field="description" value={description}></textarea> : 
         <p>{description}</p>}
@@ -68,7 +87,17 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit})
               <tr key={i}>
                 <td>{skillLadder[level[0].rating]}</td>
                 {level.map( (skill, j) => (
-                  <td key={j}><DiceButton character={name} name={skill.name} rating={skill.rating} rollDice={rollDice}/> {skill.name} </td>
+                  <td key={j}>
+                    <div>
+                      <DiceButton character={name} name={skill.name} 
+                        rating={skill.rating} rollDice={rollDice}/>
+                      {skill.name}
+                      {editActive && 
+                        <input className='skill-number' type='number' value='0' 
+                          skillname={skill.name} skillrating={skill.rating} 
+                          onInput={skillInput}/>}
+                    </div>
+                  </td>
                 ))}
               </tr>
             ))}
