@@ -49,7 +49,8 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
   return (
     <div className='character'>
       {editActive &&
-        <input type='text' className='character-text-input' value={character.name}/>}
+        <input type='text' className='character-text-input' value={character.name}
+          field="name" onChange={updateTextField}/>}
       {editActive ?
         <textarea onChange={updateTextField} className="character-description" 
           rows="4" field="description" value={description}></textarea> : 
