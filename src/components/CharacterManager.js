@@ -24,11 +24,16 @@ export const CharacterManager = ({gameData={}, gm=false, openCharacters,
       }
       
       <ul>
-        {gameData.characters != null && gameData.characters.map( (character, i) => (
-          <li key={i}>
-            <a id={character._id} href={character.name} onClick={newCharacterTab}>{character.name}</a>
-          </li>
-          ))}
+        {gameData.characters != null && gameData.characters.map( (character, i) => { 
+          if (gm || character.visibility === 'all') {
+            return (
+              <li key={i}>
+                <a id={character._id} href={character.name} onClick={newCharacterTab}>{character.name}</a>
+              </li>
+            )
+          }
+          })
+        }
       </ul>
       
     </div>
