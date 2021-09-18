@@ -66,7 +66,7 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
   }
 
   // Check whether user can edit sheet
-  const canEdit = users.includes(userID) || gm;
+  const canEdit = users.some((user) => user.userID === userID) || gm;
 
   return (
     <div className='character'>
