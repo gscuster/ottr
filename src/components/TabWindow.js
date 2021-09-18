@@ -11,10 +11,13 @@ export const TabWindow =  ({gameName, gameData, rollDice, users, gm,
 
   const setCharacter = (characters, setCharacters, index) => {
     return (newCharacter) => {
+      // Replace the matching character in characters
       const newCharacters = characters.map( (oldCharacter, i) => (
         (i === index) ? newCharacter : oldCharacter 
       ));
       setCharacters(newCharacters);
+
+      // Update the character
       updateCharacter(newCharacter)
     }
   }

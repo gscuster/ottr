@@ -1,5 +1,7 @@
 export const FateCoreSheet = {
   _id: null,
+  visibility: 'gm',
+  owners: [],
   format: 'Fate Core',
   name: 'New Character',
   description: 'Insert character description here',

@@ -24,7 +24,7 @@ export const CharacterManager = ({gameData={}, gm=false, openCharacters,
       }
       
       <ul>
-        {gameData.characters != null && gameData.characters.map( (character, i) => { 
+        {gameData.characters != null && gameData.characters.map( (character, i) =>  { 
           if (gm || character.visibility === 'all') {
             return (
               <li key={i}>
@@ -32,6 +32,7 @@ export const CharacterManager = ({gameData={}, gm=false, openCharacters,
               </li>
             )
           }
+          else return false;
           })
         }
       </ul>

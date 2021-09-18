@@ -1,5 +1,6 @@
 import io from 'socket.io-client';
 import EventEmitter from 'events';
+import * as Characters from '../utilities/Characters.js';
 
 const port = '4000';
 const address = window.location.hostname + ':' + port;
@@ -147,5 +148,12 @@ export const selectUserName = (username) => {
  * @param {Object} character 
  */
 export const updateCharacter = (character) => {
-  socket.emit('updateCharacter', character);
+  // Get character template
+  const characterTemplate = Characters.getCharacter(character.format);
+
+  // Use template and input character to create new character. This will
+  // ensure that any new properties added to the template get added to each
+  // character that uses the template
+  const newCharacter = {...characterTemplate, ...character};
+  socket.emit('updateCharacter', newCharacter);
 }

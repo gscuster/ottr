@@ -1,5 +1,7 @@
 export const FateAcceleratedSheet = {
   _id: null,
+  visibility: 'gm',
+  owners: [],
   format: 'Fate Accelerated',
   name: 'New Character',
   description: 'Insert character description here',
