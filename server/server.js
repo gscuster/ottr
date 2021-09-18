@@ -261,7 +261,7 @@ io.on('connection', async (socket) => {
     const oldCharacter = await getCharacter(gameDb, character._id);
     if (oldCharacter != null) {
       // Check if the updater has permission to update
-      if (oldCharacter.owners.includes(socket.userID) || 
+      if (oldCharacter.owners.some((user) => user.userID === socket.userID) || 
         gameState.gameData.gm.includes(socket.userID)) {
         // Update character
         const newCharacter = {...oldCharacter, ...character};
