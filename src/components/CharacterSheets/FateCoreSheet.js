@@ -95,10 +95,6 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
                       <DiceButton character={name} name={skill.name} 
                         rating={skill.rating} rollDice={rollDice}/>
                       {skill.name}
-                      {editActive && 
-                        <input className='skill-number' type='number' value='0' 
-                          skillname={skill.name} skillrating={skill.rating} 
-                          onInput={skillInput}/>}
                     </div>
                   </td>
                 ))}

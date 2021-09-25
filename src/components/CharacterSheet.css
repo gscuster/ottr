@@ -30,11 +30,6 @@ dl dt {
 table img {
   vertical-align: middle;
 }
-.skill-number {
-  width: 1em;
-  background: transparent;
-  border: none;
-}
 
 .character-text-input {
   background: transparent;
