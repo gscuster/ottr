@@ -67,8 +67,10 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
       {canEdit ?
         <p>Fate Points:<input type='number' className='character-num-input' 
           value={character.fatePoints} field="fatePoints" 
+          onChange={saveTextField}/> Refresh: <input type='number' className='character-num-input' 
+          value={character.refresh} field="refresh" 
           onChange={saveTextField}/></p> :
-        <p>Fate Points: {character.fatePoints}</p>}
+        <p>Fate Points: {character.fatePoints} Refresh: {character.refresh}</p>}
       <table>
         <thead>
           <tr>
