@@ -1,4 +1,5 @@
 import { DiceButton } from '../DiceButton';
+import TextField from '@mui/material/TextField';
 
 const skillLadder = {
   '-2': 'Terrible',
@@ -44,6 +45,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
   const updateTextField = (e) => {
     const field = e.target.getAttribute('field');
     const updatedCharacter = {...character, [field]: e.target.value }
+    console.log(`Updating ${field} with ${e.target.value}`)
     setCharacterData(updatedCharacter);
   }
 
@@ -55,15 +57,23 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
     saveCharacterData(updatedCharacter);
   }
 
+  const descriptionField = <TextField
+      id="outlined-multiline-flexible"
+      label="Description"
+      multiline
+      maxRows={4}
+      value={description}
+      onChange={updateTextField}
+      inputProps = {{field: "description"}}
+      InputProps = {{readOnly: !editActive}}
+    />
+
   return (
     <div className='character'>
       {editActive &&
         <input type='text' className='character-text-input' value={character.name}
           field="name" onChange={updateTextField}/>}
-      {editActive ?
-        <textarea onChange={updateTextField} className="character-description" 
-          rows="4" field="description" value={description}></textarea> : 
-        <p>{description}</p>}
+      {descriptionField}
       {canEdit ?
         <p>Fate Points:<input type='number' className='character-num-input' 
           value={character.fatePoints} field="fatePoints" 
