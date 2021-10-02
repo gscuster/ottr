@@ -36,3 +36,11 @@ table img {
   border: none;
   margin-bottom: 0.5em;
 }
+
+.character-num-input {
+  background: transparent;
+  border: none;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
+  width: 3em;
+}

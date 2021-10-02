@@ -48,25 +48,39 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
     setEditActive(false);
   }
 
+  // calls updateCharacter with currrent character info
+  const saveCharacterData = (updatedCharacter) => {
+    setCharacterData(updatedCharacter);
+    // If the character doesn't have an ID, add it
+    if (characterData._id == null ){
+      const id =  uuidv4();
+      updateCharacter({...updatedCharacter, _id: id});
+    }
+    else {
+      updateCharacter(updatedCharacter);
+    }
+    setEditActive(false);
+  }
+
   
 
   const handleEditActive = () => {
     setEditActive(true);
   }
-  
+  // Check whether user can edit sheet
+  const canEdit = character.owners.some((user) => user.userID === userID) || gm;
+
   let sheet;
   switch (character.format) {
     case 'Fate Core':
       sheet = <FateCoreSheet rollDice={rollDice} character={characterData} 
-        gm={gm} setCharacterData={setCharacterData} editActive={editActive}/>
+        gm={gm} setCharacterData={setCharacterData} editActive={editActive} canEdit={canEdit}
+        saveCharacterData={saveCharacterData}/>
       break;
     default:
       console.log(character);
       sheet = <p>Error: No sheet component available for this character format</p>
   }
-
-  // Check whether user can edit sheet
-  const canEdit = character.owners.some((user) => user.userID === userID) || gm;
 
   return (
     <div className='character'>

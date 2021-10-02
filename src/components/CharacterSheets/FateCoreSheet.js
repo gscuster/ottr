@@ -18,7 +18,7 @@ const skillLadder = {
 }
 
 export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
-  editActive, setEditActive}) => {
+  editActive, setEditActive, saveCharacterData}) => {
   const {name, description, aspects, skills, stunts} = character;
   const sortedSkills = Object.keys(skillLadder).reverse().map( (key) => {
     return skills.filter(skill => skill.rating === key)
@@ -40,10 +40,19 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
     setCharacterData(updatedCharacter);
   }
   
+  // Sets character data with updated field
   const updateTextField = (e) => {
     const field = e.target.getAttribute('field');
     const updatedCharacter = {...character, [field]: e.target.value }
     setCharacterData(updatedCharacter);
+  }
+
+  // Sets character data with updated field and calls saveCharacterData with
+  // the updated character data.
+  const saveTextField = (e) => {
+    const field = e.target.getAttribute('field');
+    const updatedCharacter = {...character, [field]: e.target.value }
+    saveCharacterData(updatedCharacter);
   }
 
   return (
@@ -55,6 +64,11 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
         <textarea onChange={updateTextField} className="character-description" 
           rows="4" field="description" value={description}></textarea> : 
         <p>{description}</p>}
+      {canEdit ?
+        <p>Fate Points:<input type='number' className='character-num-input' 
+          value={character.fatePoints} field="fatePoints" 
+          onChange={saveTextField}/></p> :
+        <p>Fate Points: {character.fatePoints}</p>}
       <table>
         <thead>
           <tr>
