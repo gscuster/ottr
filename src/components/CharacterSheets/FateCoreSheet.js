@@ -57,23 +57,30 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
     saveCharacterData(updatedCharacter);
   }
 
-  const descriptionField = <TextField
-      id="outlined-multiline-flexible"
-      label="Description"
-      multiline
-      maxRows={4}
-      value={description}
-      onChange={updateTextField}
-      inputProps = {{field: "description"}}
-      InputProps = {{readOnly: !editActive}}
-    />
-
   return (
     <div className='character'>
-      {editActive &&
-        <input type='text' className='character-text-input' value={character.name}
-          field="name" onChange={updateTextField}/>}
-      {descriptionField}
+      <TextField
+        variant='standard'
+        label="Name"
+        value={name}
+        onChange={updateTextField}
+        inputProps = {{field: "name"}}
+        InputProps = {{
+          readOnly: !editActive,
+          disableUnderline: true && !editActive}}
+        className="character-text"
+      />
+      <TextField
+        label="Description"
+        multiline
+        maxRows={4}
+        value={description}
+        onChange={updateTextField}
+        fullWidth={true}
+        inputProps = {{field: "description"}}
+        InputProps = {{readOnly: !editActive}}
+        className="character-text"
+      />
       {canEdit ?
         <p>Fate Points:<input type='number' className='character-num-input' 
           value={character.fatePoints} field="fatePoints" 
