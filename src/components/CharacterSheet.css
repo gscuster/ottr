@@ -44,3 +44,7 @@ table img {
   margin-left: 0.5em;
   width: 3em;
 }
+
+.character-text.character-text {
+  margin: 0.5em;
+}

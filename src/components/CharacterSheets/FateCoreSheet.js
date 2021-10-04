@@ -1,4 +1,5 @@
 import { DiceButton } from '../DiceButton';
+import TextField from '@mui/material/TextField';
 
 const skillLadder = {
   '-2': 'Terrible',
@@ -44,6 +45,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
   const updateTextField = (e) => {
     const field = e.target.getAttribute('field');
     const updatedCharacter = {...character, [field]: e.target.value }
+    console.log(`Updating ${field} with ${e.target.value}`)
     setCharacterData(updatedCharacter);
   }
 
@@ -57,13 +59,28 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
 
   return (
     <div className='character'>
-      {editActive &&
-        <input type='text' className='character-text-input' value={character.name}
-          field="name" onChange={updateTextField}/>}
-      {editActive ?
-        <textarea onChange={updateTextField} className="character-description" 
-          rows="4" field="description" value={description}></textarea> : 
-        <p>{description}</p>}
+      <TextField
+        variant='standard'
+        label="Name"
+        value={name}
+        onChange={updateTextField}
+        inputProps = {{field: "name"}}
+        InputProps = {{
+          readOnly: !editActive,
+          disableUnderline: true && !editActive}}
+        className="character-text"
+      />
+      <TextField
+        label="Description"
+        multiline
+        maxRows={4}
+        value={description}
+        onChange={updateTextField}
+        fullWidth={true}
+        inputProps = {{field: "description"}}
+        InputProps = {{readOnly: !editActive}}
+        className="character-text"
+      />
       {canEdit ?
         <p>Fate Points:<input type='number' className='character-num-input' 
           value={character.fatePoints} field="fatePoints" 
