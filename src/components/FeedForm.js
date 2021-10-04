@@ -1,5 +1,8 @@
+import './FeedForm.css'
 import React, { useState } from "react";
 import { DiceButton } from './DiceButton';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 /**
  * React component. Form with text, a button to send the text, and a dice button.
@@ -8,7 +11,12 @@ import { DiceButton } from './DiceButton';
  */
 export const FeedForm = ({sendMessage, rollDice}) => {
   const [message, setMessage] = useState("");
+  const [diceModifier, setDiceModifier] = useState(0);
   
+  const handleDiceModifier = (e) => {
+    setDiceModifier(e.target.value);
+  }
+
   const handleSubmit = (e) => {
       e.preventDefault();
       if (message) {
@@ -19,7 +27,25 @@ export const FeedForm = ({sendMessage, rollDice}) => {
 
   return (
     <form className="feed-form" onSubmit={handleSubmit}>
-      <DiceButton id='feed-dice' rating={0} rollDice={rollDice} height='32' width='32'/>
+      <DiceButton id='feed-dice' rating={diceModifier} rollDice={rollDice} 
+        height='32' width='32'/>
+      <Select
+        className="feed-dice-modifier"
+        variant="standard"
+        value={diceModifier} 
+        onChange={handleDiceModifier}
+        autoWidth
+        disableUnderline
+      >
+        <MenuItem value={-1}>-1</MenuItem>
+        <MenuItem value={0}>+0</MenuItem>
+        <MenuItem value={1}>+1</MenuItem>
+        <MenuItem value={2}>+2</MenuItem>
+        <MenuItem value={3}>+3</MenuItem>
+        <MenuItem value={4}>+4</MenuItem>
+        <MenuItem value={5}>+5</MenuItem>
+        <MenuItem value={6}>+6</MenuItem>
+      </Select>
       <input type="text" 
         className="feed-input"
         autoComplete="off"
