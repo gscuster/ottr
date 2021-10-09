@@ -1,5 +1,6 @@
 import { DiceButton } from '../DiceButton';
 import TextField from '@mui/material/TextField';
+import { DataGrid } from '@mui/x-data-grid';
 
 const skillLadder = {
   '-2': 'Terrible',
@@ -20,7 +21,7 @@ const skillLadder = {
 
 export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
   editActive, setEditActive, saveCharacterData}) => {
-  const {name, description, aspects, skills, stunts} = character;
+  const {name, description, aspects, skills, stunts, extras} = character;
   const sortedSkills = Object.keys(skillLadder).reverse().map( (key) => {
     return skills.filter(skill => skill.rating === key)
   })
@@ -56,6 +57,11 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
     const updatedCharacter = {...character, [field]: e.target.value }
     saveCharacterData(updatedCharacter);
   }
+
+  const extrasColumns = [
+    {field: 'name', headerName: 'Extra', width: 240},
+    {field: 'description', headerName: 'Description', width: 240, flex: 1}
+  ]
 
   return (
     <div className='character'>
@@ -144,6 +150,14 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
           <dd key={2*index + 1}>{stunt.description}</dd>
         ]))}
       </dl>
+
+      <DataGrid
+        rows={extras}
+        columns={extrasColumns}
+        getRowId={(row) => row.name}
+        hideFooter={true}
+        autoHeight
+      />
     </div>
   );
 }
