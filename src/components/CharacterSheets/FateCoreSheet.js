@@ -60,7 +60,8 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
 
   const extrasColumns = [
     {field: 'name', headerName: 'Extra', width: 240},
-    {field: 'description', headerName: 'Description', width: 240, flex: 1}
+    {field: 'description', headerName: 'Description', width: 240, flex: 1,
+      sortable: false}
   ]
 
   return (
@@ -157,6 +158,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
         getRowId={(row) => row.name}
         hideFooter={true}
         autoHeight
+        disableSelectionOnClick
       />
     </div>
   );
