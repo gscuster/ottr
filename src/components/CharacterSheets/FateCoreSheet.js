@@ -58,10 +58,23 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
     saveCharacterData(updatedCharacter);
   }
 
+  const updateTableField = (e, field) => {
+    const cellIndex = e.id
+    const updatedField = character[field].map((element, index) => (
+      index === cellIndex ? {...element, [e.field]: e.value} : element
+    ))
+    const updatedCharacter = {...character, [field]: updatedField}
+    setCharacterData(updatedCharacter)
+  }
+
+  const extrasWithID = extras.map((extra, index) => {
+    return {...extra, id: index}
+  })
+
   const extrasColumns = [
-    {field: 'name', headerName: 'Extra', width: 240},
+    {field: 'name', headerName: 'Extra', width: 240, editable: editActive},
     {field: 'description', headerName: 'Description', width: 240, flex: 1,
-      sortable: false}
+      sortable: false, editable: editActive}
   ]
 
   return (
@@ -153,12 +166,13 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
       </dl>
 
       <DataGrid
-        rows={extras}
+        rows={extrasWithID}
         columns={extrasColumns}
-        getRowId={(row) => row.name}
         hideFooter={true}
         autoHeight
+        id='Extras'
         disableSelectionOnClick
+        onCellEditCommit={(e) => updateTableField(e, 'extras')}
       />
     </div>
   );
