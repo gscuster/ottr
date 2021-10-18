@@ -1,6 +1,10 @@
 import { DiceButton } from '../DiceButton';
 import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import { DataGrid } from '@mui/x-data-grid';
+import React, { useEffect } from 'react';
 
 const skillLadder = {
   '-2': 'Terrible',
@@ -58,13 +62,31 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
     saveCharacterData(updatedCharacter);
   }
 
+  const addTableField = (field) => {
+    const updatedField = [...character[field], {name: '', description: ''}]
+    const updatedCharacter = {...character, [field]: updatedField}
+    setCharacterData(updatedCharacter)
+  }
+
   const updateTableField = (e, field) => {
-    const cellIndex = e.id
+    const rowIndex = e.id
     const updatedField = character[field].map((element, index) => (
-      index === cellIndex ? {...element, [e.field]: e.value} : element
+      index === rowIndex ? {...element, [e.field]: e.value} : element
     ))
     const updatedCharacter = {...character, [field]: updatedField}
     setCharacterData(updatedCharacter)
+  }
+
+  const removeTableField = (rowIndex, field) => {
+    if (rowIndex != null) {
+      const updatedField = character[field].filter((element, index) => (
+        index !== rowIndex
+      ))
+      const updatedCharacter = {...character, [field]: updatedField}
+      // Using setTimeout as MUI will try to remove focus for the cell and will
+      // raise an error if it has already been deleted.
+      setTimeout(() => setCharacterData(updatedCharacter))
+    }
   }
 
   const extrasWithID = extras.map((extra, index) => {
@@ -74,7 +96,15 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
   const extrasColumns = [
     {field: 'name', headerName: 'Extra', width: 240, editable: editActive},
     {field: 'description', headerName: 'Description', width: 240, flex: 1,
-      sortable: false, editable: editActive}
+      sortable: false, editable: editActive},
+    {field: 'id', headerName: 'Delete', width: 80, hide: !editActive,
+      renderCell: (params) => (
+        <IconButton aria-label='delete' color='error'
+          onClick={(e) => removeTableField(params.id ?? null, 'extras')}>
+          <RemoveIcon/>
+        </IconButton>
+      )
+    }
   ]
 
   return (
@@ -174,6 +204,11 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
         disableSelectionOnClick
         onCellEditCommit={(e) => updateTableField(e, 'extras')}
       />
+      {editActive && 
+        <IconButton aria-label="add" color="success" 
+        onClick={() => addTableField('extras')}>
+          <AddIcon/>
+        </IconButton>}
     </div>
   );
 }
