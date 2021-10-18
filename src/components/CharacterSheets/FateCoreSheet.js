@@ -4,7 +4,6 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { DataGrid } from '@mui/x-data-grid';
-import React, { useEffect } from 'react';
 
 const skillLadder = {
   '-2': 'Terrible',
