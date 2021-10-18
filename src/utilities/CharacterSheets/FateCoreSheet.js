@@ -15,7 +15,7 @@ export const FateCoreSheet = {
     {type: 'Severe', description: ''}
   ],
   extras: [
-    {name: 'Example Extra', description: 'Example extra description'}
+    {id: 0, name: 'Example Extra', description: 'Example extra description'},
   ],
   aspects: [
     {name: 'High Concept',
