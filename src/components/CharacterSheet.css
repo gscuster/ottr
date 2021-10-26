@@ -48,3 +48,7 @@ table img {
 .character-text.character-text {
   margin: 0.5em;
 }
+
+.character-list-primary.character-list-primary {
+  font-weight: bold;
+}

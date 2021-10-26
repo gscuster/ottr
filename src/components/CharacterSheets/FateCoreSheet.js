@@ -3,8 +3,10 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import Divider from '@mui/material/Divider';
 import { DataGrid } from '@mui/x-data-grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
 const skillLadder = {
   '-2': 'Terrible',
@@ -197,20 +199,44 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
       </table>
 
       <h3>Stunts</h3>
-      {stunts.map( (stunt, index) => (
-        <TextField
-          label={stunt.name}
-          multiline
-          maxRows={6}
-          value={stunt.description}
-          onChange={(e) => updateTableFieldIndex(e, index, 'stunts')}
-          fullWidth={true}
-          inputProps = {{field: "description"}}
-          InputProps = {{readOnly: !editActive}}
-          className="character-text"
-        />
-      ))}
-        
+      <List>
+        {stunts.map( (stunt, index) => (
+          <ListItem key={index}>
+            <ListItemText
+              primary={
+                <TextField
+                  variant='standard'
+                  value={stunt.name}
+                  onChange={(e) => updateTableFieldIndex(e, index, 'stunts')}
+                  inputProps = {{field: "name"}}
+                  InputProps = {{
+                    readOnly: !editActive, 
+                    disableUnderline: true,
+                    classes: {
+                      input: 'character-list-primary'
+                    }
+                  }}
+                  className="character-text"
+                />
+              }
+              secondary={
+                <TextField
+                  variant='standard'
+                  multiline
+                  maxRows={6}
+                  value={stunt.description}
+                  onChange={(e) => updateTableFieldIndex(e, index, 'stunts')}
+                  fullWidth={true}
+                  inputProps = {{field: "description"}}
+                  InputProps = {{readOnly: !editActive}}
+                  className="character-text"
+                />
+              }
+            />
+          </ListItem>
+        ))}
+      </List>
+
       <h3>Extras</h3>
       <DataGrid
         rows={extrasWithID}
