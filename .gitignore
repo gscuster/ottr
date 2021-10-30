@@ -24,3 +24,4 @@ yarn-error.log*
 node_modules
 server/Authentication.js
 planning
+/src/res/user

@@ -2,8 +2,11 @@ import { DiceButton } from '../DiceButton';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid } from '@mui/x-data-grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
 const skillLadder = {
   '-2': 'Terrible',
@@ -76,6 +79,15 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
     setCharacterData(updatedCharacter)
   }
 
+  const updateTableFieldIndex = (e, rowIndex, field) => {
+    const subfield = e.target.getAttribute('field');
+    const updatedField = character[field].map((element, index) => (
+      index === rowIndex ? {...element, [subfield]: e.target.value} : element
+    ))
+    const updatedCharacter = {...character, [field]: updatedField}
+    setCharacterData(updatedCharacter)
+  }
+
   const removeTableField = (rowIndex, field) => {
     if (rowIndex != null) {
       const updatedField = character[field].filter((element, index) => (
@@ -98,9 +110,9 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
       sortable: false, editable: editActive},
     {field: 'id', headerName: 'Delete', width: 80, hide: !editActive,
       renderCell: (params) => (
-        <IconButton aria-label='delete' color='error'
+        <IconButton aria-label='delete'
           onClick={(e) => removeTableField(params.id ?? null, 'extras')}>
-          <RemoveIcon/>
+          <DeleteIcon/>
         </IconButton>
       )
     }
@@ -137,6 +149,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
           value={character.refresh} field="refresh" 
           onChange={saveTextField}/></p> :
         <p>Fate Points: {character.fatePoints} Refresh: {character.refresh}</p>}
+
       <table>
         <thead>
           <tr>
@@ -154,8 +167,6 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
             )}           
           )}
         </tbody>
-        
-        
       </table>
 
       <table>
@@ -186,14 +197,61 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
         
       </table>
 
-      <h3>Stunts</h3>
-      <dl>
-        {stunts.map( (stunt, index) => ([
-          <dt key={2*index}>{stunt.name}</dt>,
-          <dd key={2*index + 1}>{stunt.description}</dd>
-        ]))}
-      </dl>
+      <h3 className='character-header'>Stunts</h3>
+      <List>
+        {stunts.map( (stunt, index) => (
+          <ListItem key={index} className='character-list-item'>
+            <ListItemText
+              className='character-list'
+              primary={
+                <div>
+                  <TextField
+                    variant='standard'
+                    value={stunt.name}
+                    onChange={(e) => updateTableFieldIndex(e, index, 'stunts')}
+                    inputProps = {{field: "name"}}
+                    InputProps = {{
+                      readOnly: !editActive, 
+                      disableUnderline: true,
+                      classes: {
+                        input: 'character-list-primary'
+                      }
+                    }}
+                    className="character-list"
+                  />
+                  {editActive &&
+                    <IconButton aria-label='delete' 
+                      onClick={(e) => removeTableField(index, 'stunts')}>
+                      <DeleteIcon/>
+                    </IconButton>
+                  }
+                </div>
+              }
+              secondary={
+                <TextField
+                  variant='standard'
+                  multiline
+                  maxRows={6}
+                  value={stunt.description}
+                  onChange={(e) => updateTableFieldIndex(e, index, 'stunts')}
+                  fullWidth={true}
+                  inputProps = {{field: "description"}}
+                  InputProps = {{readOnly: !editActive}}
+                  className="character-list"
+                />
+              }
+            />
+          </ListItem>
+        ))}
+      </List>
+      {editActive && 
+        <IconButton aria-label="add" color="success" 
+        onClick={() => addTableField('stunts')}>
+          <AddIcon/>
+        </IconButton>
+      }
 
+      <h3>Extras</h3>
       <DataGrid
         rows={extrasWithID}
         columns={extrasColumns}
