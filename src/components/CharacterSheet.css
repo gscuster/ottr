@@ -51,4 +51,17 @@ table img {
 
 .character-list-primary.character-list-primary {
   font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+.character-list.character-list {
+  margin: 0;
+  padding: 0;
+}
+.character-list-item.character-list-item {
+  margin-bottom: 0;
+  padding-top: 0;
+}
+.character-header {
+  margin-bottom: 0;
 }
