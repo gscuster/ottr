@@ -7,6 +7,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import { EditableDetailList } from '../EditableDetailList';
 
 const skillLadder = {
   '-2': 'Terrible',
@@ -168,6 +169,11 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
           )}
         </tbody>
       </table>
+
+      <h3 className='character-header'>Aspects</h3>
+      <EditableDetailList updateItem={updateTableFieldIndex} 
+        addItem={addTableField} removeItem={removeTableField} items={aspects}
+        itemType='aspects' editActive={editActive}/>
 
       <table>
         <thead>

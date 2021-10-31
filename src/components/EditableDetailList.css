@@ -1,0 +1,16 @@
+.edl-list-primary.edl-list-primary {
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+  }
+  .edl-list.edl-list {
+    margin: 0;
+    padding: 0;
+  }
+  .edl-list-item.edl-list-item {
+    margin-bottom: 0;
+    padding-top: 0;
+  }
+  .edl-header {
+    margin-bottom: 0;
+  }
