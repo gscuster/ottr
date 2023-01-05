@@ -2,6 +2,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { CharacterManager } from './CharacterManager.js';
 import { CharacterSheet } from './CharacterSheet.js';
 import { GameInfo } from './GameInfo.js';
+import { TabCloseButton } from './TabCloseButton.js';
 import React, { useState } from 'react';
 import './TabWindow.css';
 
@@ -22,13 +23,22 @@ export const TabWindow =  ({gameName, gameData, rollDice, users, gm,
     }
   }
 
+  const closeCharacter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpenCharacters(openCharacters.filter((character) => (character._id !== e.target.id)));
+  }
+
   return (
     <Tabs className='tabs'>
       <TabList>
         <Tab>Map</Tab>
         <Tab>Characters</Tab>
         {openCharacters.map( (character, i) => (
-          <Tab key={i}>{character.name}</Tab>
+          <Tab key={i}>
+            {character.name}
+            <TabCloseButton onClick={closeCharacter} id={character._id}/>
+          </Tab>
         ))}
         <Tab>Game Info</Tab>
       </TabList>
