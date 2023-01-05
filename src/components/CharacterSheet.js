@@ -6,7 +6,6 @@ import React, { useState } from 'react';
 export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false, 
   userID=0, users=[]}) => {
   const [characterData, setCharacterData] = useState({...character});
-  const [editActive, setEditActive] = useState(character._id == null);
 
   // Adds an owner to the character
   const addOwner = (e) => {
@@ -25,14 +24,7 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
       [...characterData.owners, addedUser] : [addedUser]
     const updatedCharacter = {...characterData,
       owners: updatedUsers}
-    setCharacterData(updatedCharacter);
-    saveCharacter();
-  }
-
-  const cancelChanges = (e) => {
-    e.preventDefault();
-    setEditActive(false);
-    setCharacterData({...character});
+    saveCharacterData(updatedCharacter);
   }
 
   // calls updateCharacter with currrent character info
@@ -40,12 +32,13 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
     // If the character doesn't have an ID, add it
     if (characterData._id == null ){
       const id =  uuidv4();
-      updateCharacter({...characterData, _id: id});
+      const updatedCharacter = {...characterData, _id: id};
+      setCharacterData(updatedCharacter)
+      updateCharacter(updatedCharacter);
     }
     else {
       updateCharacter({...characterData});
     }
-    setEditActive(false);
   }
 
   // calls updateCharacter with currrent character info
@@ -59,16 +52,11 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
     else {
       updateCharacter(updatedCharacter);
     }
-    setEditActive(false);
   }
 
-  
-
-  const handleEditActive = () => {
-    setEditActive(true);
-  }
   // Check whether user can edit sheet
   const canEdit = character.owners.some((user) => user.userID === userID) || gm;
+  const editActive = canEdit;
 
   let sheet;
   switch (character.format) {
@@ -85,15 +73,6 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
   return (
     <div className='character'>
       {canEdit && characterData._id == null && <button onClick={saveCharacter}>Save Character</button>}
-      {canEdit && !editActive && characterData._id != null && 
-        <button onClick={handleEditActive}>Edit Character</button>}
-      
-      {editActive && characterData._id != null &&
-        <form>
-          <input type='button' onClick={saveCharacter} value='Update Character'/>
-          <input type='button' onClick={cancelChanges} value='Cancel Changes'/>
-        </form>
-      }
 
       {(character._id != null && gm) &&
         <div>

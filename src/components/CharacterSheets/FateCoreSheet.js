@@ -45,7 +45,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
       oldSkill.name === skillName ? updatedSkill : oldSkill);
     const updatedCharacter = {...character, skills: updatedSkills};
     console.log(updatedCharacter);
-    setCharacterData(updatedCharacter);
+    saveCharacterData(updatedCharacter);
   }
   
   // Sets character data with updated field
@@ -53,7 +53,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
     const field = e.target.getAttribute('field');
     const updatedCharacter = {...character, [field]: e.target.value }
     console.log(`Updating ${field} with ${e.target.value}`)
-    setCharacterData(updatedCharacter);
+    saveCharacterData(updatedCharacter);
   }
 
   // Sets character data with updated field and calls saveCharacterData with
@@ -67,7 +67,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
   const addTableField = (field) => {
     const updatedField = [...character[field], {name: '', description: ''}]
     const updatedCharacter = {...character, [field]: updatedField}
-    setCharacterData(updatedCharacter)
+    saveCharacterData(updatedCharacter)
   }
 
   const updateTableField = (e, field) => {
@@ -76,7 +76,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
       index === rowIndex ? {...element, [e.field]: e.value} : element
     ))
     const updatedCharacter = {...character, [field]: updatedField}
-    setCharacterData(updatedCharacter)
+    saveCharacterData(updatedCharacter)
   }
 
   const updateTableFieldIndex = (e, rowIndex, field) => {
@@ -85,7 +85,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
       index === rowIndex ? {...element, [subfield]: e.target.value} : element
     ))
     const updatedCharacter = {...character, [field]: updatedField}
-    setCharacterData(updatedCharacter)
+    saveCharacterData(updatedCharacter)
   }
 
   const removeTableField = (rowIndex, field) => {
@@ -96,7 +96,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
       const updatedCharacter = {...character, [field]: updatedField}
       // Using setTimeout as MUI will try to remove focus for the cell and will
       // raise an error if it has already been deleted.
-      setTimeout(() => setCharacterData(updatedCharacter))
+      setTimeout(() => saveCharacterData(updatedCharacter))
     }
   }
 
@@ -116,6 +116,16 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
         </IconButton>
       )
     }
+  ]
+
+  const aspectsWithID = aspects.map((extra, index) => {
+    return {...extra, id: index}
+  })
+
+  const aspectsColumns = [
+    {field: 'name', headerName: 'Aspect', width: 240, editable: editActive},
+    {field: 'description', headerName: 'Description', width: 240, flex: 1,
+      sortable: false, editable: editActive}
   ]
 
   return (
@@ -149,25 +159,17 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
           value={character.refresh} field="refresh" 
           onChange={saveTextField}/></p> :
         <p>Fate Points: {character.fatePoints} Refresh: {character.refresh}</p>}
-
-      <table>
-        <thead>
-          <tr>
-            <th>Aspect</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {aspects.map( (aspect, index) => 
-            {return (
-            <tr key={index}>
-              <td>{aspect.name}</td>
-              <td>{aspect.description}</td>
-            </tr>
-            )}           
-          )}
-        </tbody>
-      </table>
+      
+      <h3>Aspects</h3>
+      <DataGrid
+        rows={aspectsWithID}
+        columns={aspectsColumns}
+        hideFooter={true}
+        autoHeight
+        id='Aspects'
+        disableSelectionOnClick
+        onCellEditCommit={(e) => updateTableField(e, 'aspects')}
+      />
 
       <table>
         <thead>
