@@ -61,6 +61,9 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
   let sheet;
   switch (character.format) {
     case 'Fate Core':
+      if (characterData._id == null) {
+        saveCharacter();
+      }
       sheet = <FateCoreSheet rollDice={rollDice} character={characterData} 
         gm={gm} setCharacterData={setCharacterData} editActive={editActive} canEdit={canEdit}
         saveCharacterData={saveCharacterData}/>
@@ -72,8 +75,6 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
 
   return (
     <div className='character'>
-      {canEdit && characterData._id == null && <button onClick={saveCharacter}>Save Character</button>}
-
       {(character._id != null && gm) &&
         <div>
           <br/>
