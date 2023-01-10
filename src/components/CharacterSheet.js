@@ -80,9 +80,9 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
           <br/>
         <b >Owners:</b>
         <div >
-          {characterData.owners && characterData.owners.map( (user, i) => (
-              <span key={i}>{user.username}</span>
-            ))
+          {characterData.owners &&
+            <span>{characterData.owners.map( user => user.username)
+              .join(', ')}</span>
           }
         </div>
         <br />
