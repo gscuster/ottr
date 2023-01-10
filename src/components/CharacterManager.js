@@ -1,11 +1,15 @@
+import { v4 as uuidv4 } from 'uuid';
 import * as Characters from '../utilities/Characters.js';
 import './CharacterManager.css';
 
 export const CharacterManager = ({gameData={}, gm=false, openCharacters,
-  setOpenCharacters, userID}) => {
+  setOpenCharacters, updateCharacter, userID}) => {
   const createCharacter = () => {
     console.log('Creating a new character');
-    setOpenCharacters([...openCharacters, Characters.getCharacter('Fate Core')]);
+    const id = uuidv4();
+    const character = {...Characters.getCharacter('Fate Core'), _id: id}
+    updateCharacter(character)
+    setOpenCharacters([...openCharacters, character]);
   }
 
   const newCharacterTab = (e) => {
