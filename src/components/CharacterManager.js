@@ -2,7 +2,7 @@ import * as Characters from '../utilities/Characters.js';
 import './CharacterManager.css';
 
 export const CharacterManager = ({gameData={}, gm=false, openCharacters,
-  setOpenCharacters}) => {
+  setOpenCharacters, userID}) => {
   const createCharacter = () => {
     console.log('Creating a new character');
     setOpenCharacters([...openCharacters, Characters.getCharacter('Fate Core')]);
@@ -16,6 +16,8 @@ export const CharacterManager = ({gameData={}, gm=false, openCharacters,
     }
   }
 
+  const isOwner = character => character.owners.some((user) => user.userID === userID);
+
   return (
     <div className='character-manager'>
       <h2>Characters:</h2>
@@ -25,7 +27,7 @@ export const CharacterManager = ({gameData={}, gm=false, openCharacters,
       
       <ul>
         {gameData.characters != null && gameData.characters.map( (character, i) =>  { 
-          if (gm || character.visibility === 'all') {
+          if (gm || character.visibility === 'all' || isOwner(character)) {
             return (
               <li key={i}>
                 <a id={character._id} href={character.name} onClick={newCharacterTab}>{character.name}</a>

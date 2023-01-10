@@ -49,7 +49,7 @@ export const TabWindow =  ({gameName, gameData, rollDice, users, gm,
   
       <TabPanel>
         <CharacterManager gameData={gameData} gm={gm}
-          openCharacters={openCharacters} setOpenCharacters={setOpenCharacters}/>
+          openCharacters={openCharacters} setOpenCharacters={setOpenCharacters} userID={userID}/>
       </TabPanel>
   
       {openCharacters.map( (character, i) => (
