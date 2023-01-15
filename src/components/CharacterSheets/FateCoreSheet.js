@@ -26,7 +26,7 @@ const skillLadder = {
 }
 
 export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
-  editActive, setEditActive, saveCharacterData}) => {
+  editActive, setEditActive, saveCharacterData, gm=false}) => {
   const {name, description, aspects, skills, stunts, extras} = character;
   const sortedSkills = Object.keys(skillLadder).reverse().map( (key) => {
     return skills.filter(skill => skill.rating === key)
@@ -100,6 +100,12 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
     }
   }
 
+  const addSkill = () => {
+    const updatedSkills = [...character['skills'], {name: 'Default Skill', rating: '1'}]
+    const updatedCharacter = {...character, ['skills']: updatedSkills}
+    saveCharacterData(updatedCharacter)
+  }
+
   const extrasWithID = extras.map((extra, index) => {
     return {...extra, id: index}
   })
@@ -127,6 +133,9 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
     {field: 'description', headerName: 'Description', width: 240, flex: 1,
       sortable: false, editable: editActive}
   ]
+
+  const skillsColumns = [{field: 'name', headerName: 'Rating'},
+                         {field: 'skill', headerName: 'Skill'}]
 
   return (
     <div className='character'>
@@ -171,6 +180,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
         onCellEditCommit={(e) => updateTableField(e, 'aspects')}
       />
 
+      <h3>Skills</h3>
       <table>
         <thead>
           <tr>
@@ -190,14 +200,24 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
                       <DiceButton character={name} name={skill.name} 
                         rating={skill.rating} rollDice={rollDice}/>
                       {skill.name}
+                      {gm &&
+                        <input type='number' className='character-num-input-transparent' 
+                          value={0}
+                          skillName={skill.name}
+                          skillRating={skill.rating}
+                          onChange={skillInput}/>}
                     </div>
                   </td>
                 ))}
               </tr>
             ))}
         </tbody>
-        
       </table>
+      {gm && 
+        <IconButton aria-label="add" color="success" 
+        onClick={addSkill}>
+          <AddIcon/>
+        </IconButton>}
 
       <h3 className='character-header'>Stunts</h3>
       <List>

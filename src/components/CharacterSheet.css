@@ -45,6 +45,15 @@ table img {
   width: 3em;
 }
 
+.character-num-input-transparent {
+  background: transparent;
+  border: none;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
+  width: 3em;
+  color: rgba(0, 0, 0, 0);
+}
+
 .character-text.character-text {
   margin: 0.5em;
 }
