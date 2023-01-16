@@ -25,10 +25,29 @@ export const connect = async () => {
   }
 }
 
+export const find = async (db, collectionName, query=null) => {
+  try {
+    return (await (await db).collection(collectionName)
+                            .find(query)
+                            .toArray()) ?? [];
+  }
+  catch {
+    return [];
+  }
+}
+
+export const findOne = async (db, collectionName, id) => {
+  try {
+    return (await (await db).collection(collectionName).findOne({_id: id}));
+  }
+  catch {
+    return null;
+  }
+}
+
 export const getCollection = async (client, dbName, collectionName) => {
   try {
-    const collection = await (await client).db(dbName).collection(collectionName);
-    return collection;
+    return await (await client).db(dbName).collection(collectionName);
   }
   catch {
     return null;
@@ -37,8 +56,7 @@ export const getCollection = async (client, dbName, collectionName) => {
 
 export const getDatabase = async (client, dbName) => {
   try {
-    const db = await (await client).db(dbName);
-    return db;
+    return await (await client).db(dbName);
   }
   catch {
     return null;

@@ -109,15 +109,7 @@ io.on('connection', async (socket) => {
       setGameState(newGameState);
       socket.emit('gameState', gameState);
       console.log('We are in a game. Sending the state');
-      // Send the feed as well
-      let feed;
-      try {
-        feed = (await (await gameDb).collection('feed').find().toArray()) ?? [];
-      }
-      catch {
-        feed = [];
-      }
-      socket.emit('feed', feed);
+      socket.emit('feed', await Database.find((await gameDb), 'feed'));
     }
     else {
       // We're not in a game, get a list of available games to send back
@@ -138,15 +130,7 @@ io.on('connection', async (socket) => {
 
   // Get the feed from the database on request
   socket.on('getFeed', async () => {
-    let feed;
-    try {
-      feed = (await (await ottrDb).collection('feed').find().toArray()) ?? [];
-      console.log(feed);
-    }
-    catch {
-      feed = [];
-    }
-    socket.emit('feed', feed);
+    socket.emit('feed', await Database.find((await ottrDb), 'feed'));
   });
 
   // Set the game
@@ -163,8 +147,7 @@ io.on('connection', async (socket) => {
       gameDb = await Database.getDatabase(client, gameName);
 
       // Get the data for this game
-      const gameData = (await gameDb.collection('game_data').findOne({'_id': 'game_data'})) ?? 
-        {gm: null};
+      const gameData = await Database.findOne(gameDb, 'game_data', 'game_data') ?? {gm: null};
 
       // Check if the game has a GM. If not, make the user that selected the game GM
       if (gameData.gm == null || gameData.gm.length === 0) {
@@ -178,14 +161,7 @@ io.on('connection', async (socket) => {
       // Set up the feed for the game
       socket.on('message', (msg, data=null) => Message.onMessage(msg, data, io, socket, gameDb));
       // Get the feed and send it
-      let feed;
-      try {
-        feed = (await (await gameDb).collection('feed').find().toArray()) ?? [];
-      }
-      catch {
-        feed = [];
-      }
-      socket.emit('feed', feed);
+      socket.emit('feed', await Database.find((await gameDb), 'feed'));
 
       // Get characters
       const characters = await getCharacters(gameDb);
@@ -321,24 +297,10 @@ io.listen(port, {
 });
 
 const getCharacter = async (db, id) => {
-  let character;
-  try {
-    character = (await (await db).collection('characters').findOne({_id: id}));
-  }
-  catch {
-    character = null;
-  }
-  return character;
+  return await Database.findOne(db, 'characters', id);
 }
 
 const getCharacters = async (db) => {
-  let characters;
-  try {
-    characters = (await (await db).collection('characters').find().toArray()) ?? [];
-  }
-  catch {
-    characters = [];
-  }
-  return characters;
+  return await Database.find(db, 'characters');
 }
 
