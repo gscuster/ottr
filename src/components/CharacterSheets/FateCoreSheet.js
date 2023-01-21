@@ -288,6 +288,17 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
         onClick={() => addTableField('extras')}>
           <AddIcon/>
         </IconButton>}
+      {character.owners.some((user) => user.userID === userID) &&
+         <TextField
+         label="Player Notes"
+         multiline
+         maxRows={4}
+         value={notes}
+         onChange={updateTextField}
+         fullWidth={true}
+         inputProps = {{field: "notes"}}
+         InputProps = {{readOnly: !editActive}}
+         className="character-text"/>}
       {gm &&
          <TextField
          label="GM Notes"
