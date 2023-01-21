@@ -63,7 +63,7 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
     case 'Fate Core':
       sheet = <FateCoreSheet rollDice={rollDice} character={characterData} 
         gm={gm} setCharacterData={setCharacterData} editActive={editActive} canEdit={canEdit}
-        saveCharacterData={saveCharacterData}/>
+        saveCharacterData={saveCharacterData} userID={userID}/>
       break;
     default:
       console.log(character);
