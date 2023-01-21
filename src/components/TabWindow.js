@@ -3,12 +3,18 @@ import { CharacterManager } from './CharacterManager.js';
 import { CharacterSheet } from './CharacterSheet.js';
 import { GameInfo } from './GameInfo.js';
 import { TabCloseButton } from './TabCloseButton.js';
-import React, { useState } from 'react';
+import { debounce } from 'lodash/function';
+import React, { useState, useCallback } from 'react';
 import './TabWindow.css';
 
 export const TabWindow =  ({gameName, gameData, rollDice, users, gm, 
   updateCharacter, userID}) => {
   const [openCharacters, setOpenCharacters] = useState([]);
+
+  // Debounce used for all character updates
+  const debouncedUpdateCharacter = useCallback(
+    debounce(updateCharacter, 200)
+  , []);
 
   const setCharacter = (characters, setCharacters, index) => {
     return (newCharacter) => {
@@ -19,7 +25,7 @@ export const TabWindow =  ({gameName, gameData, rollDice, users, gm,
       setCharacters(newCharacters);
 
       // Update the character
-      updateCharacter(newCharacter)
+      debouncedUpdateCharacter(newCharacter)
     }
   }
 
@@ -50,7 +56,7 @@ export const TabWindow =  ({gameName, gameData, rollDice, users, gm,
       <TabPanel>
         <CharacterManager gameData={gameData} gm={gm}
           openCharacters={openCharacters} setOpenCharacters={setOpenCharacters} userID={userID}
-          updateCharacter={updateCharacter}/>
+          updateCharacter={debouncedUpdateCharacter}/>
       </TabPanel>
   
       {openCharacters.map( (character, i) => (

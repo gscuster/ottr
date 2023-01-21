@@ -294,7 +294,7 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
          multiline
          maxRows={4}
          value={gmNotes}
-         onBlur={updateTextField}
+         onChange={updateTextField}
          fullWidth={true}
          inputProps = {{field: "gmNotes"}}
          InputProps = {{readOnly: !editActive}}
