@@ -25,8 +25,8 @@ const skillLadder = {
   '4-1': 'Stupid accident'
 }
 
-export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
-  editActive, setEditActive, saveCharacterData, gm=false, userID}) => {
+export const FateCoreSheet = ({ rollDice, character, canEdit,
+  editActive, saveCharacterData, gm=false, userID}) => {
   const {name, description, aspects, skills, stunts, extras, notes, gmNotes} = character;
   const sortedSkills = Object.keys(skillLadder).reverse().map( (key) => {
     return skills.filter(skill => skill.rating === key)
@@ -288,28 +288,6 @@ export const FateCoreSheet = ({ rollDice, character, setCharacterData, canEdit,
         onClick={() => addTableField('extras')}>
           <AddIcon/>
         </IconButton>}
-      {character.owners.some((user) => user.userID === userID) &&
-         <TextField
-         label="Player Notes"
-         multiline
-         maxRows={4}
-         value={notes}
-         onChange={updateTextField}
-         fullWidth={true}
-         inputProps = {{field: "notes"}}
-         InputProps = {{readOnly: !editActive}}
-         className="character-text"/>}
-      {gm &&
-         <TextField
-         label="GM Notes"
-         multiline
-         maxRows={4}
-         value={gmNotes}
-         onChange={updateTextField}
-         fullWidth={true}
-         inputProps = {{field: "gmNotes"}}
-         InputProps = {{readOnly: !editActive}}
-         className="character-text"/>}
     </div>
   );
 }

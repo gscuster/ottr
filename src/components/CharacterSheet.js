@@ -1,4 +1,5 @@
 import  "./CharacterSheet.css";
+import TextField from '@mui/material/TextField';
 import { FateCoreSheet } from './CharacterSheets/FateCoreSheet';
 import { v4 as uuidv4 } from 'uuid';
 import React, { useState } from 'react';
@@ -6,6 +7,7 @@ import React, { useState } from 'react';
 export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false, 
   userID=0, users=[]}) => {
   const [characterData, setCharacterData] = useState({...character});
+  const {notes, gmNotes} = character;
 
   // Adds an owner to the character
   const addOwner = (e) => {
@@ -54,6 +56,14 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
     }
   }
 
+  // Sets character data with updated field
+  const updateTextField = (e) => {
+    const field = e.target.getAttribute('field');
+    const updatedCharacter = {...character, [field]: e.target.value }
+    console.log(`Updating ${field} with ${e.target.value}`)
+    saveCharacterData(updatedCharacter);
+  }
+
   // Check whether user can edit sheet
   const canEdit = character.owners.some((user) => user.userID === userID) || gm;
   const editActive = canEdit;
@@ -95,6 +105,26 @@ export const CharacterSheet = ({ rollDice, character, updateCharacter, gm=false,
         </div>
       }
       {sheet}
+      {character.owners.some((user) => user.userID === userID) &&
+         <TextField
+         label="Player Notes"
+         multiline
+         maxRows={4}
+         value={notes}
+         onChange={updateTextField}
+         fullWidth={true}
+         inputProps = {{field: "notes"}}
+         className="character-text"/>}
+      {gm &&
+         <TextField
+         label="GM Notes"
+         multiline
+         maxRows={4}
+         value={gmNotes}
+         onChange={updateTextField}
+         fullWidth={true}
+         inputProps = {{field: "gmNotes"}}
+         className="character-text"/>}
     </div>
   );
 }
